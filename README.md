@@ -43,16 +43,20 @@ lado incómodo: vender contra el último aliento del flujo institucional. Medimo
 │   ├── 02_HALLAZGOS.md      ← todos los números: lo que funcionó Y lo que murió (igual de valioso)
 │   ├── 03_PROMPTS.md        ← los prompts exactos de investigación (Grok/X, literatura académica)
 │   ├── 04_PROTOCOLO_FORWARD.md ← cómo se valida esto de verdad (demo, corte, criterios firmados)
-│   └── 05_STACK.md          ← el mapa de la sala de máquinas: cada herramienta, su rol y su costo
+│   ├── 05_STACK.md          ← el mapa de la sala de máquinas: cada herramienta, su rol y su costo
+│   ├── 06_AUDITORIA_INDEPENDIENTE.md ← cómo un tercero re-verificó Y cuestionó el caso (¡léelo!)
+│   └── 07_FAQ_FORWARD_ESTUDIANTE.md  ← dudas frecuentes al montar el forward (trailing, capital, VPS…)
 ├── ea/
 │   ├── TokioReversal_v1.mq5 ← la regla pura (1 pata, gotobi, salida 10:10)
 │   ├── TokioReversal_v2.mq5 ← + fin de mes + "sombra" de la salida alternativa (medir sin operar)
 │   └── TokioReversal_v3.mq5 ← canasta de 5 patas calificadas con riesgo por evento
 ├── backtest/
 │   ├── nakane_backtest.py   ← arnés completo replicable (MetaTrader5 + Python)
-│   └── dukascopy_replica.py ← réplica en feed independiente (la prueba de fuego)
+│   ├── dukascopy_replica.py ← réplica en feed independiente (la prueba de fuego)
+│   └── verificar_dataset.py ← auditoría reproducible: recalcula el CSV + spot-check de ticks
 └── data/
-    └── resultados_replica_dukascopy.csv ← el dataset del veredicto (436 días, verificable)
+    ├── resultados_replica_dukascopy.csv ← el dataset del veredicto (436 días, verificable)
+    └── EVENTOS_AUSENTES.md  ← los 32 gotobis ausentes (468 vs 436): cobertura y trazabilidad
 ```
 
 ## La historia en 10 pasos (cómo se llegó aquí en un día)

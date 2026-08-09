@@ -11,6 +11,10 @@ stop 20 pips, costo = spread real del tick + comisión.
 USO:      python dukascopy_replica.py          (sin dependencias raras: stdlib + pandas/numpy)
 NOTA:     Dukascopy limita por IP (~6 archivos/min). ~900 archivos => paciencia o varias corridas
           (cachea en ./duka_cache y retoma donde quedó).
+SALIDA:   guarda data/resultados_replica_dukascopy_regen.csv (NO sobrescribe el publicado, que se
+          preserva como evidencia) y REPORTA LA COBERTURA: cuántos gotobis del calendario quedaron
+          sin datos de ticks en esta corrida (listados en data/eventos_sin_datos.txt). Sin
+          truncamiento silencioso. Arreglo tras la auditoría de la comunidad (ver docs/06).
 
 Criterio PASA (fíjalo ANTES de correr): media > +1 pip, t >= 2.5, >= 5/7 años positivos.
 Instituto Quant · https://www.InstitutoQuant.com · Material educativo, no asesoría financiera.
@@ -114,9 +118,30 @@ def main():
             continue
         res.append(dict(f=pd.Timestamp(d), pips=(e_bid - ex_px) / PIP - COMISION_PIPS))
 
-    df = pd.DataFrame(res)
+    df = pd.DataFrame(res).sort_values("f").reset_index(drop=True)
+
+    # --- COBERTURA + REPRODUCIBILIDAD (arreglo tras auditoría de la comunidad, docs/06) ---
+    # Regla dura: NADA de truncamiento silencioso. Se guarda el CSV regenerado (sin sobrescribir
+    # el publicado, que se preserva como evidencia) y se reporta cada gotobi del calendario que
+    # quedó sin datos de ticks en esta corrida (antes se descartaban en silencio -> el desfase
+    # 468 calendario vs 436 publicado que detectó la auditoría).
+    data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data")
+    out_csv = os.path.normpath(os.path.join(data_dir, "resultados_replica_dukascopy_regen.csv"))
+    df.to_csv(out_csv, index=False)
+    hechos = {r["f"].date() for r in res}
+    ausentes = [d for d in G if d not in hechos]
+    print(f"\nCSV regenerado -> {out_csv}  ({len(df)} filas)")
+    print(f"COBERTURA: {len(G)} gotobis en calendario | {len(df)} con datos | "
+          f"{len(ausentes)} SIN datos de ticks (no incluidos en esta corrida)")
+    if ausentes:
+        aus_txt = os.path.normpath(os.path.join(data_dir, "eventos_sin_datos.txt"))
+        with open(aus_txt, "w") as fh:
+            fh.write("\n".join(d.isoformat() for d in ausentes) + "\n")
+        print(f"  {len(ausentes)} eventos sin datos listados -> {aus_txt}")
+        print("  (Dukascopy no sirvió ticks para esos días en esta corrida; reintenta para recuperarlos)")
+
     p = df.pips.values
-    se = p.std() / np.sqrt(len(p))
+    se = p.std(ddof=1) / np.sqrt(len(p))   # ddof=1: SE insesgado (evita inflar el t con N chico)
     t = p.mean() / se
     print(f"\nTOTAL  N={len(p)}  media={p.mean():+.2f} pips  "
           f"IC95=[{p.mean()-1.96*se:+.2f},{p.mean()+1.96*se:+.2f}]  t={t:.2f}")
