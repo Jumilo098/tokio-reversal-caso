@@ -1,2 +1,2 @@
-n,fecha_jst,simbolo,tipo,entrada,salida,pips_netos,slippage_pips,spread_fix_pts,latencia_ms,motivo_salida,nota
-1,2026-08-10,USDJPY,SELL,157.926,158.124,-20.0,+0.2,0,76,STOP,"stop-out a los 9 min; precio subio ~20p tras el fix (el ~47% perdedor)"
+n,fecha_jst,simbolo,tipo,entrada,salida,pips_netos,sombra_tiempo_pips,slippage_pips,spread_fix_pts,latencia_ms,motivo_salida,nota
+1,2026-08-10,USDJPY,SELL,157.926,158.124,-20.0,-13.7,+0.2,0,76,STOP,"stop-out a los 9 min (pico 158.144); salida por tiempo 10:10 habria sido 158.052 = -13.7 neto; el precio NUNCA revirtio bajo la entrada (perdedor de cualquier forma)"
