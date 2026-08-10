@@ -45,18 +45,24 @@ lado incómodo: vender contra el último aliento del flujo institucional. Medimo
 │   ├── 04_PROTOCOLO_FORWARD.md ← cómo se valida esto de verdad (demo, corte, criterios firmados)
 │   ├── 05_STACK.md          ← el mapa de la sala de máquinas: cada herramienta, su rol y su costo
 │   ├── 06_AUDITORIA_INDEPENDIENTE.md ← cómo un tercero re-verificó Y cuestionó el caso (¡léelo!)
-│   └── 07_FAQ_FORWARD_ESTUDIANTE.md  ← dudas frecuentes al montar el forward (trailing, capital, VPS…)
+│   ├── 07_FAQ_FORWARD_ESTUDIANTE.md  ← dudas frecuentes al montar el forward (trailing, capital, VPS…)
+│   ├── 08_TELEMETRIA_Y_FORWARD.md    ← qué medir en el forward + primer evento real auditado end-to-end
+│   └── 09_ENDURECIMIENTO_EA.md       ← revisión de ejecución del EA (filling, reloj, DST…) para Exness
 ├── ea/
 │   ├── TokioReversal_v1.mq5 ← la regla pura (1 pata, gotobi, salida 10:10)
+│   ├── TokioReversal_v1_exness.mq5 ← v1.10: MISMA regla, ejecución endurecida (ver docs/09)
 │   ├── TokioReversal_v2.mq5 ← + fin de mes + "sombra" de la salida alternativa (medir sin operar)
 │   └── TokioReversal_v3.mq5 ← canasta de 5 patas calificadas con riesgo por evento
 ├── backtest/
 │   ├── nakane_backtest.py   ← arnés completo replicable (MetaTrader5 + Python)
 │   ├── dukascopy_replica.py ← réplica en feed independiente (la prueba de fuego)
 │   └── verificar_dataset.py ← auditoría reproducible: recalcula el CSV + spot-check de ticks
-└── data/
-    ├── resultados_replica_dukascopy.csv ← el dataset del veredicto (436 días, verificable)
-    └── EVENTOS_AUSENTES.md  ← los 32 gotobis ausentes (468 vs 436): cobertura y trazabilidad
+├── data/
+│   ├── resultados_replica_dukascopy.csv ← el dataset del veredicto (436 días, verificable)
+│   └── EVENTOS_AUSENTES.md  ← los 32 gotobis ausentes (468 vs 436): cobertura y trazabilidad
+└── forward/
+    ├── bitacora_forward.csv ← el conteo real hacia los 60 eventos (evento 1 registrado)
+    └── README.md            ← columnas, criterios de corte firmados y estado
 ```
 
 ## La historia en 10 pasos (cómo se llegó aquí en un día)
