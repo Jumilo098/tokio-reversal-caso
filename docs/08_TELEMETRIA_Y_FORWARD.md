@@ -93,5 +93,44 @@ Sin fecha de corte y criterios firmados **antes**, un forward es esperanza con g
 **Regla de oro:** la regla NO se toca durante el forward. Cualquier idea (trailing, otra salida, otra
 pata) se mide como *sombra* o como hipótesis nueva pre-registrada — nunca bolteando el EA en marcha.
 
+## 4. Conectar el EA al hub (v1.20)
+
+Medir a mano lo que el EA ya sabe es trabajo perdido — y peor, es trabajo que se olvida de hacer el
+día que el evento sale raro. `ea/TokioReversal_v1_telemetria.mq5` es la **v1.10 endurecida con la
+regla intacta**, más el arnés de telemetría del hub del Instituto. Compilado y verificado: 0
+errores, 0 warnings.
+
+Lo que reporta, evento por evento:
+
+| Evento | Qué lleva |
+|---|---|
+| `START` | Se manda **por temporizador**, no en el primer tick: así se confirma la integración un sábado con el mercado cerrado |
+| `HEARTBEAT` | Uno por día JST. Sirve para distinguir "no operó" de "estaba caído" — que es justo la diferencia que el incidente del 10-ago hizo importante |
+| `OPEN` | Lote, riesgo, spread en el fix, precio pretendido vs. lleno (**slippage real**) y SL colocado |
+| `CLOSE` | Profit, swap, comisión, motivo (`TIME`/`STOP`), duración y pips brutos |
+| `SKIP` | Cuando el spread veta el evento — el skip honesto también es un dato |
+
+Puesta en marcha (los tres fallos que se llevan el 90% del tiempo están en la bitácora del hub):
+
+1. Coger el **token personal** del miembro en el panel del hub.
+2. MT5 → Herramientas → Opciones → Asesores Expertos → **Permitir WebRequest**, y **PEGAR** el
+   dominio del proyecto. No escribirlo: el identificador son veinte caracteres aleatorios y una
+   letra distinta hace que MetaTrader corte la llamada en silencio (`err=4014`). Pulsar **Enter**
+   para que la fila quede añadida.
+3. Inputs: `UseWebTelemetry=true`, `TelemetryUrl=.../functions/v1/runner-ingest`, `TelemetryToken=<token>`.
+4. Verificar en el **Diario de MetaTrader (pestaña Expertos)**. Es el único sitio donde el terminal
+   dice la verdad; todo lo demás es adivinar.
+5. Si migras a VPS: la lista blanca de WebRequest viaja en la **foto** del terminal. Cambiarla
+   después no le hace nada al VPS hasta re-sincronizar.
+
+> ⚠️ **Trampa medida:** el hub guarda `ea_version` **truncado a 16 caracteres**. Por eso el EA manda
+> `tokio-1.20` y no `tokioreversal-1.20`, que llegaría cortado. Si ves una versión a medias en la
+> base, es esto — y no un EA distinto.
+
+**La telemetría nunca decide nada.** Si el envío falla, el trade sigue exactamente igual: aquí no
+hay trailing que gestionar entre las 09:55 y las 10:10, así que un `WebRequest` lento no puede
+estropear una ejecución.
+
+---
 ---
 🎓 **[www.InstitutoQuant.com](https://www.InstitutoQuant.com)** — el forward es el único juez final.
