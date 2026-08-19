@@ -21,6 +21,14 @@
 //|     puntual aunque el mercado asiatico este quieto).             |
 //|   * Filling: SetTypeFillingBySymbol (evita rechazo 10030 en      |
 //|     Exness por "unsupported filling mode").                      |
+//|                                                                  |
+//|  == v1.20 TELEMETRIA (la REGLA sigue sin cambiar) ==             |
+//|   * Reporta al hub datos.institutoquant.com con el modulo        |
+//|     oficial Telemetria.mqh (entorno, START, pulso, OPEN, CLOSE,  |
+//|     SKIP, STOP).                                                 |
+//|   * FIX C4: el modulo se apropia del temporizador (lo pasa a     |
+//|     60 s tras el START). Aqui se devuelve a 1 s, o el EA pierde  |
+//|     la ventana del fix. Ver docs/09.                             |
 //+------------------------------------------------------------------+
 #property copyright   "InstitutoQuant - pre-registrado en ORO/docs/07"
 #property version     "1.10"
@@ -30,15 +38,17 @@
 
 #include <Trade/Trade.mqh>
 
-//#define USAR_TELEMETRIA   // opcional: modulo interno de telemetria del Instituto (no incluido)        // comentar esta linea si no tienes Telemetria.mqh instalado
+// v1.20: telemetria ACTIVADA con el modulo OFICIAL del hub (Telemetria.mqh).
+// El modulo NO viaja en este repo: se descarga del panel de datos.institutoquant.com y
+// se deja en MQL5\Include\. Si no lo tienes, usa TokioReversal_v1_exness.mq5.
+#define USAR_TELEMETRIA
 #ifdef USAR_TELEMETRIA
   #include <Telemetria.mqh>
 #endif
 
-#define EA_VERSION "tokioreversal-1.20"
-// OJO: el hub guarda ea_version en 16 caracteres. "tokioreversal-1.20" (18) llegaria
-// CORTADO a "tokioreversal-1.". Por eso lo que viaja al hub es esta cadena corta:
-#define EA_VERSION_STR "tokio-1.20"
+// La Edge Function guarda ea_version con str(ea_version, 16): "tokioreversal-1.20"
+// (18) llegaria CORTADO a "tokioreversal-1.". Por eso la version que viaja es corta.
+#define EA_VERSION "tokio-1.20"
 
 //==================== INPUTS ====================
 input group "=== General ==="
@@ -47,19 +57,6 @@ input long   MagicNumber         = 20260808;   // Magic (fecha del pre-registro)
 input int    ServerToUTC_Horas   = 0;          // Offset servidor->UTC (Exness = 0, validado en ORO)
 input int    SlippagePoints      = 50;         // Desviacion maxima
 input bool   PrintDebug          = true;
-
-input group "=== Telemetria (hub datos.institutoquant.com) ==="
-// El EA POSTea a la Edge Function 'runner-ingest' con el token PERSONAL del miembro
-// (header x-runner-token). NO lleva key de lectura: el token solo permite ESCRIBIR
-// eventos a nombre propio. ANTES de arrancar hay que pegar el dominio en
-// Herramientas > Opciones > Asesores Expertos > "Permitir WebRequest".
-// PEGA la URL, no la escribas: el id del proyecto son 20 caracteres aleatorios y
-// una letra distinta hace que MetaTrader corte la llamada en silencio (err=4014).
-input bool   UseWebTelemetry     = false;      // OFF de fabrica: si no lo enciendes NO manda nada
-input string TelemetryUrl        = "";         // https://<proyecto>.supabase.co/functions/v1/runner-ingest
-input string TelemetryToken      = "";         // token PERSONAL del miembro (lo entrega el Instituto; no compartir)
-input int    WebTimeoutMs        = 2000;       // eventos de trade (OPEN/CLOSE)
-input int    WebTimeoutFastMs    = 1200;       // informativos (START/HEARTBEAT/SKIP)
 
 input group "=== Regla congelada (docs/07 - NO TOCAR sin nuevo pre-registro) ==="
 input int    StopPips            = 20;         // Stop de proteccion (pips)
@@ -110,62 +107,6 @@ bool EsGotobiJST(const datetime jstAhora)
    return false;
   }
 
-//==================== TELEMETRIA WEB (hub del Instituto) ====================
-// Portado del arnes del XAU M15 Runner v4.7. Diferencia clave: aqui NO hay trailing
-// vivo, asi que no hace falta cola anti-bloqueo -- el EA solo toca el mercado dos
-// veces al dia (09:55 y 10:10) y entre medias no gestiona nada tick a tick.
-// LA TELEMETRIA NUNCA DECIDE NADA: si falla, el trade sigue igual.
-bool     g_anunciado   = false;   // START se manda por TIMER, no en OnInit (asi funciona con mercado cerrado)
-datetime g_diaLatido   = 0;       // ultimo dia JST con HEARTBEAT enviado
-double   g_entradaFill = 0;       // precio de fill real (para pips y slippage del CLOSE)
-double   g_entradaRef  = 0;       // bid leido antes de mandar la orden (referencia de slippage)
-
-string JsonEsc(string v)
-  {
-   StringReplace(v, "\\", "\\\\");
-   StringReplace(v, "\"", "\\\"");
-   return v;
-  }
-
-string BuildEventBody(const string ev, const string extraJson)
-  {
-   return "{\"account\":"+IntegerToString((int)AccountInfoInteger(ACCOUNT_LOGIN))+
-          ",\"symbol\":\""+JsonEsc(_Symbol)+"\""+
-          ",\"magic\":"+IntegerToString((int)MagicNumber)+
-          ",\"ea_version\":\""+EA_VERSION_STR+"\""+
-          ",\"event\":\""+JsonEsc(ev)+"\""+
-          ",\"equity\":"+DoubleToString(AccountInfoDouble(ACCOUNT_EQUITY),2)+
-          ",\"balance\":"+DoubleToString(AccountInfoDouble(ACCOUNT_BALANCE),2)+
-          extraJson+"}";
-  }
-
-bool PostEvent(const string body, const int timeout)
-  {
-   string headers = "Content-Type: application/json\r\n"
-                    "x-runner-token: " + TelemetryToken + "\r\n";
-   char data[]; int n = StringToCharArray(body, data, 0, WHOLE_ARRAY, CP_UTF8);
-   if(n > 0) ArrayResize(data, n-1);              // sin el terminador nulo
-   char result[]; string resHeaders;
-   ResetLastError();
-   int code = WebRequest("POST", TelemetryUrl, headers, timeout, data, result, resHeaders);
-   if(code < 200 || code >= 300)
-     {
-      if(PrintDebug)
-         PrintFormat("Telemetria fallo: http=%d err=%d. err=4014 -> la URL no esta en la lista blanca "
-                     "de WebRequest del terminal LOCAL (pegala, no la escribas). http=401 -> token "
-                     "invalido o revocado.", code, GetLastError());
-      return false;
-     }
-   return true;
-  }
-
-void SendEvent(const string ev, const string extraJson, const bool critical=true)
-  {
-   if(!UseWebTelemetry || MQLInfoInteger(MQL_TESTER)) return;
-   if(TelemetryUrl=="" || TelemetryToken=="") return;
-   PostEvent(BuildEventBody(ev, extraJson), critical ? WebTimeoutMs : WebTimeoutFastMs);
-  }
-
 //==================== POSICIONES ====================
 ulong TicketMio()
   {
@@ -198,8 +139,11 @@ void IntentarEntrada()
      {
       g_ultimoDiaOperado = diaJST;                    // skip honesto: consume el dia
       Print("SKIP por spread en el fix: ", spread, " pts (limite ", SkipSpreadPoints, ")");
-      SendEvent("SKIP", ",\"spread_pts\":"+IntegerToString((int)spread)+
-                        ",\"exit_reason\":\"SKIP_SPREAD\"", false);
+#ifdef USAR_TELEMETRIA
+      // el skip honesto es un DATO: sin el, la muestra del forward queda sesgada en silencio
+      TelemetriaEnviar("SKIP", ",\"spread_pts\":"+DoubleToString((double)spread,1)+
+                               ",\"exit_reason\":\"SKIP_SPREAD\"", false);
+#endif
       return;
      }
 
@@ -246,19 +190,6 @@ void IntentarEntrada()
    if(ok && (rc==TRADE_RETCODE_DONE || rc==TRADE_RETCODE_DONE_PARTIAL))
      {
       g_ultimoDiaOperado = diaJST;
-      g_entradaRef  = entry;                      // bid leido ANTES de mandar (referencia)
-      g_entradaFill = trade.ResultPrice();        // precio de fill REAL
-      if(g_entradaFill <= 0) g_entradaFill = entry;
-      // slippage en pips, con signo: + = a favor del corto (vendimos mas caro)
-      double slipPips = (g_entradaFill - g_entradaRef) / Pip();
-      SendEvent("OPEN", ",\"dir\":\"SELL\""+
-                        ",\"lot\":"+DoubleToString(lot,2)+
-                        ",\"risk_pct\":"+DoubleToString(RiskPercent,3)+
-                        ",\"intended\":"+DoubleToString(g_entradaRef,Dig())+
-                        ",\"filled\":"+DoubleToString(g_entradaFill,Dig())+
-                        ",\"slip_pts\":"+DoubleToString(slipPips*10.0,1)+
-                        ",\"spread_pts\":"+IntegerToString((int)spread)+
-                        ",\"sl_price\":"+DoubleToString(sl,Dig()));
       if(PrintDebug)
          Print("SELL fix Tokio: ", DoubleToString(lot,2), " lotes | entrada=",
                DoubleToString(entry, Dig()), " SL=", DoubleToString(sl, Dig()),
@@ -293,46 +224,6 @@ void IntentarSalida()
 void OnTradeTransaction(const MqlTradeTransaction &trans,
                         const MqlTradeRequest &request, const MqlTradeResult &result)
   {
-   // --- CLOSE al hub (no depende del modulo privado Telemetria.mqh) ---
-   if(trans.type == TRADE_TRANSACTION_DEAL_ADD && UseWebTelemetry && !MQLInfoInteger(MQL_TESTER))
-     {
-      ulong dl = trans.deal;
-      if(dl > 0 && HistoryDealSelect(dl) &&
-         HistoryDealGetString(dl, DEAL_SYMBOL) == _Symbol &&
-         (long)HistoryDealGetInteger(dl, DEAL_MAGIC) == MagicNumber)
-        {
-         long et = HistoryDealGetInteger(dl, DEAL_ENTRY);
-         if(et == DEAL_ENTRY_OUT || et == DEAL_ENTRY_OUT_BY)
-           {
-            double salida = HistoryDealGetDouble(dl, DEAL_PRICE);
-            double prof   = HistoryDealGetDouble(dl, DEAL_PROFIT);
-            double swp    = HistoryDealGetDouble(dl, DEAL_SWAP);
-            double com    = HistoryDealGetDouble(dl, DEAL_COMMISSION);
-            long   razon  = HistoryDealGetInteger(dl, DEAL_REASON);
-            string motivo = (razon == DEAL_REASON_SL) ? "STOP" : "TIME";
-            // pips BRUTOS del corto; el neto se reconstruye en el hub con comision+swap
-            double pips   = (g_entradaFill > 0) ? (g_entradaFill - salida) / Pip() : 0.0;
-            long   dur    = 0;
-            long   posId  = HistoryDealGetInteger(dl, DEAL_POSITION_ID);
-            if(posId > 0 && HistorySelectByPosition(posId))
-               for(int i = 0; i < HistoryDealsTotal(); i++)
-                 {
-                  ulong d2 = HistoryDealGetTicket(i);
-                  if(d2 > 0 && HistoryDealGetInteger(d2, DEAL_ENTRY) == DEAL_ENTRY_IN)
-                    { dur = (long)(HistoryDealGetInteger(dl, DEAL_TIME) - HistoryDealGetInteger(d2, DEAL_TIME)); break; }
-                 }
-            SendEvent("CLOSE", ",\"profit\":"+DoubleToString(prof,2)+
-                               ",\"swap\":"+DoubleToString(swp,2)+
-                               ",\"commission\":"+DoubleToString(com,2)+
-                               ",\"exit_reason\":\""+motivo+"\""+
-                               ",\"duracion_seg\":"+IntegerToString((int)dur)+
-                               ",\"filled\":"+DoubleToString(salida,Dig())+
-                               ",\"contexto\":{\"pips_brutos\":"+DoubleToString(pips,1)+"}");
-            g_entradaFill = 0; g_entradaRef = 0;
-           }
-        }
-     }
-
 #ifdef USAR_TELEMETRIA
    if(trans.type != TRADE_TRANSACTION_DEAL_ADD) return;
    ulong deal = trans.deal;
@@ -374,24 +265,14 @@ void OnTick()
 void OnTimer()
   {
 #ifdef USAR_TELEMETRIA
+   // ATENCION (fallo C4, ver docs/09): TelemetriaTimer() hace EventKillTimer() +
+   // EventSetTimer(60) en cuanto el START sale bien. Para un EA de hora exacta eso es
+   // fatal: la ventana de entrada dura 120 s y la salida es al minuto, asi que con un
+   // reloj de 60 s se puede PERDER el evento entero. Se devuelve el timer a 1 s.
+   bool anunciadoAntes = tl_anunciado;
    TelemetriaTimer();
+   if(!anunciadoAntes && tl_anunciado) EventSetTimer(1);   // recuperar el reloj de 1 s
 #endif
-   // START por TIMER, no en OnInit: asi se confirma la integracion un sabado con el
-   // mercado cerrado (leccion de docs/INTEGRACION.md del hub).
-   if(!g_anunciado && UseWebTelemetry)
-     {
-      SendEvent("START", "", false);
-      g_anunciado = true;
-     }
-   // un latido por dia JST: sirve para distinguir "no operó" de "estaba caido"
-   datetime jstHb = HoraJST();
-   datetime diaHb = jstHb - (jstHb % 86400);
-   if(UseWebTelemetry && diaHb != g_diaLatido)
-     {
-      g_diaLatido = diaHb;
-      SendEvent("HEARTBEAT", "", false);
-     }
-
    // timer de 1s: precision del 09:55/10:10 aunque no lleguen ticks (mercado asiatico quieto)
    IntentarSalida();
    IntentarEntrada();
@@ -415,9 +296,6 @@ int OnInit()
    Print("  SELL 09:55 JST solo gotobi -> cubrir 10:10 | stop ", StopPips,
          " pips | riesgo ", DoubleToString(RiskPercent,2), "% | skip spread>=", SkipSpreadPoints, " pts");
    Print("  SOLO DEMO hasta el corte de 60 trades. Server->UTC offset: ", ServerToUTC_Horas, "h");
-   Print("  Telemetria: ", (UseWebTelemetry ? "ON (hub del Instituto, token personal)" : "OFF"));
-   if(UseWebTelemetry && (TelemetryUrl=="" || TelemetryToken==""))
-      Print("  AVISO: UseWebTelemetry=ON pero TelemetryUrl/TelemetryToken vacios. NO va a mandar NADA.");
    if(!MQLInfoInteger(MQL_TESTER) && AccountInfoInteger(ACCOUNT_TRADE_MODE)==ACCOUNT_TRADE_MODE_REAL)
       Print("*** ATENCION: CUENTA REAL detectada. El pre-registro exige DEMO hasta el corte. ***");
    return INIT_SUCCEEDED;

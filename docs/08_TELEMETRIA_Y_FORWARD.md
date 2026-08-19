@@ -97,40 +97,59 @@ pata) se mide como *sombra* o como hipótesis nueva pre-registrada — nunca bol
 
 Medir a mano lo que el EA ya sabe es trabajo perdido — y peor, es trabajo que se olvida de hacer el
 día que el evento sale raro. `ea/TokioReversal_v1_telemetria.mq5` es la **v1.10 endurecida con la
-regla intacta**, más el arnés de telemetría del hub del Instituto. Compilado y verificado: 0
-errores, 0 warnings.
+regla intacta** y la telemetría encendida contra el **módulo oficial del hub** (`Telemetria.mqh`).
+Compilado y verificado: 0 errores, 0 warnings.
 
-Lo que reporta, evento por evento:
+> El módulo **no viaja en este repositorio**: se descarga del panel de datos.institutoquant.com y se
+> deja en `MQL5\Include\`. Si no lo tienes, usa `TokioReversal_v1_exness.mq5`, que es el mismo EA
+> sin reportar. Por eso las versiones v1/v2/v3 traen el `#define USAR_TELEMETRIA` comentado: para que
+> compilen sin el módulo, no porque falte nada.
 
-| Evento | Qué lleva |
-|---|---|
-| `START` | Se manda **por temporizador**, no en el primer tick: así se confirma la integración un sábado con el mercado cerrado |
-| `HEARTBEAT` | Uno por día JST. Sirve para distinguir "no operó" de "estaba caído" — que es justo la diferencia que el incidente del 10-ago hizo importante |
-| `OPEN` | Lote, riesgo, spread en el fix, precio pretendido vs. lleno (**slippage real**) y SL colocado |
-| `CLOSE` | Profit, swap, comisión, motivo (`TIME`/`STOP`), duración y pips brutos |
-| `SKIP` | Cuando el spread veta el evento — el skip honesto también es un dato |
+Lo que llega al hub: la foto del entorno (broker, servidor, demo/real, apalancamiento, build, VPS),
+`START`, un pulso cada 15 minutos, `OPEN` (lote, riesgo, SL, spread en puntos **y en dinero**),
+`CLOSE` (profit, swap, comisión, motivo `TIME`/`STOP`, duración), `SKIP` cuando el spread veta el
+evento, y `STOP` al quitarlo del gráfico.
 
-Puesta en marcha (los tres fallos que se llevan el 90% del tiempo están en la bitácora del hub):
+### 🔴 El fallo que encontró esta integración (C4): el módulo se queda con el reloj
 
-1. Coger el **token personal** del miembro en el panel del hub.
+`TelemetriaTimer()` hace `EventKillTimer()` + `EventSetTimer(60)` en cuanto el `START` sale bien.
+Para el EA que lo trae de serie (un runner de oro que vigila tick a tick) eso es correcto y barato.
+**Para este EA es fatal**: la ventana de entrada dura 120 segundos y la salida es al minuto exacto,
+así que con un reloj de 60 s se puede **perder el evento entero** — y encima en silencio, porque no
+hay ningún error: simplemente no entra.
+
+Es la misma familia que C1 (`docs/09`): un EA de hora exacta muere por el reloj, no por la señal.
+La v1.20 lo corrige devolviendo el temporizador a 1 s justo después del anuncio:
+
+```mql5
+bool anunciadoAntes = tl_anunciado;
+TelemetriaTimer();
+if(!anunciadoAntes && tl_anunciado) EventSetTimer(1);   // recuperar el reloj de 1 s
+```
+
+⚠️ **Aplica igual a v2 y v3**: si descomentas `USAR_TELEMETRIA` en ellas sin este guardia, degradas
+su reloj a 60 segundos.
+
+### Puesta en marcha
+
+1. Coger el **token personal** del miembro en el panel del hub, y dejar `Telemetria.mqh` en `Include`.
 2. MT5 → Herramientas → Opciones → Asesores Expertos → **Permitir WebRequest**, y **PEGAR** el
    dominio del proyecto. No escribirlo: el identificador son veinte caracteres aleatorios y una
    letra distinta hace que MetaTrader corte la llamada en silencio (`err=4014`). Pulsar **Enter**
    para que la fila quede añadida.
-3. Inputs: `UseWebTelemetry=true`, `TelemetryUrl=.../functions/v1/runner-ingest`, `TelemetryToken=<token>`.
+3. Inputs del módulo: `UsarTelemetria=true`, `TelemetriaUrl` y `TelemetriaToken` copiados del panel.
 4. Verificar en el **Diario de MetaTrader (pestaña Expertos)**. Es el único sitio donde el terminal
-   dice la verdad; todo lo demás es adivinar.
+   dice la verdad; todo lo demás es adivinar. El `START` sale por temporizador, así que se puede
+   comprobar **un sábado con el mercado cerrado**.
 5. Si migras a VPS: la lista blanca de WebRequest viaja en la **foto** del terminal. Cambiarla
    después no le hace nada al VPS hasta re-sincronizar.
 
-> ⚠️ **Trampa medida:** el hub guarda `ea_version` **truncado a 16 caracteres**. Por eso el EA manda
-> `tokio-1.20` y no `tokioreversal-1.20`, que llegaría cortado. Si ves una versión a medias en la
-> base, es esto — y no un EA distinto.
+> ⚠️ **Trampa medida:** la Edge Function guarda `ea_version` con `str(ea_version, 16)` — truncado a
+> 16 caracteres. Por eso este EA se anuncia como `tokio-1.20` y no `tokioreversal-1.20`, que llegaría
+> cortado. Si ves una versión a medias en la base (`SEASONAL_OIL_LON`, `BTC_BREAKOUT_RUN`), es esto.
 
-**La telemetría nunca decide nada.** Si el envío falla, el trade sigue exactamente igual: aquí no
-hay trailing que gestionar entre las 09:55 y las 10:10, así que un `WebRequest` lento no puede
-estropear una ejecución.
+**La telemetría nunca decide nada.** Si el envío falla, el trade sigue exactamente igual: entre las
+09:55 y las 10:10 no hay gestión tick a tick que un `WebRequest` lento pueda estropear.
 
----
 ---
 🎓 **[www.InstitutoQuant.com](https://www.InstitutoQuant.com)** — el forward es el único juez final.

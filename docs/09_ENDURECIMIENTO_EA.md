@@ -36,6 +36,14 @@ el único que se mueve es el servidor → en el cambio de estación, TODOS los f
 - **Fix robusto (opcional):** derivar el offset en vivo de `TimeGMT()` vs `TimeTradeServer()` y
   loguearlo en `OnInit` para detectar drift. Como mínimo: re-verificar en cada frontera DST.
 
+**C4 — La telemetría se apropia del temporizador.** (Hallado al conectar el EA al hub, 18-ago-2026.)
+`TelemetriaTimer()` del módulo oficial hace `EventKillTimer()` + `EventSetTimer(60)` en cuanto el
+`START` sale bien. Este EA necesita el reloj a **1 segundo**: su ventana de entrada dura 120 s y su
+salida es al minuto exacto. Con un temporizador de 60 s puede **perder el evento entero**, sin error
+y sin rastro. Descomentar `USAR_TELEMETRIA` sin más es suficiente para provocarlo.
+- **Fix:** devolver el reloj a 1 s justo después del anuncio (ver `docs/08` §4). Aplicado en
+  `TokioReversal_v1_telemetria.mq5`; **pendiente en v2 y v3**.
+
 ### 🟡 Medios
 
 **M1 — La ventana de entrada era de 5 minutos, no 2.** La condición `t.min < 55` (con hora==9) aceptaba
@@ -74,13 +82,14 @@ asegurar el fill, pero es justo lo que quieres *medir*; telemetría estructurada
 | C3 (`SetTypeFillingBySymbol`) | ✅ aplicado |
 | M1 (ventana 55–56) | ✅ aplicado |
 | M3 (stops level) | ✅ aplicado |
+| C4 (reloj vs telemetría) | ✅ aplicado en `v1_telemetria` |
 | C2 (offset dinámico DST) | ⏳ recomendado (pendiente) |
 | M2 (persistencia) | ⏳ recomendado (pendiente) |
 | M5 (reintentos) | ⏳ recomendado (pendiente) |
 
 **Importante:** v2 y v3 comparten la misma base (`HoraJST`, ausencia de `SetTypeFilling`, misma
 ventana y falta de persistencia), así que C1, C2, C3, M1, M2, M3 y M5 aplican igual cuando llegues a
-ellas.
+ellas — y **C4 además muerde en cuanto enciendas la telemetría en cualquiera de las dos**.
 
 ## La meta-lección
 El backtest valida la **regla**; el forward valida la **ejecución**. Un edge correcto puede morir por

@@ -51,7 +51,7 @@ lado incómodo: vender contra el último aliento del flujo institucional. Medimo
 ├── ea/
 │   ├── TokioReversal_v1.mq5 ← la regla pura (1 pata, gotobi, salida 10:10)
 │   ├── TokioReversal_v1_exness.mq5 ← v1.10: MISMA regla, ejecución endurecida (ver docs/09)
-│   ├── TokioReversal_v1_telemetria.mq5 ← v1.20: v1.10 + reporte al hub (docs/08 §4)
+│   ├── TokioReversal_v1_telemetria.mq5 ← v1.20: v1.10 + telemetría al hub, con el fix C4 del reloj
 │   ├── TokioReversal_v2.mq5 ← + fin de mes + "sombra" de la salida alternativa (medir sin operar)
 │   └── TokioReversal_v3.mq5 ← canasta de 5 patas calificadas con riesgo por evento
 ├── backtest/
