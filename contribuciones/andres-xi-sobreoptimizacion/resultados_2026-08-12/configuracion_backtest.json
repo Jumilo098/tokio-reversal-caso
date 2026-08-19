@@ -1,0 +1,90 @@
+{
+  "script_name": "backtest_reversal_USDJPY",
+  "script_version": "1.2 | entrada al cierre de vela + salida temporal al cierre | TP/SL + Reversal Original | SHORT | JST | score robustez | dashboard HTML",
+  "estado_ejecucion": "completo",
+  "autor": "Juan Camilo Rico",
+  "institucion": "Instituto Quant",
+  "repositorio_original": "https://github.com/Jumilo098/tokio-reversal-caso",
+  "licencia": "Creative Commons Atribución-NoComercial 4.0 Internacional (CC BY-NC 4.0)",
+  "zona_horaria_estrategia": "Asia/Tokyo",
+  "activo": "USDJPY",
+  "direccion": "SHORT / SELL únicamente",
+  "entrada": "cierre de la vela de señal",
+  "salida_temporal_reversal_original": "cierre de la vela que contiene la hora objetivo",
+  "gestion_tpsl_desde": "vela siguiente a la entrada al cierre",
+  "granularidad": "cada temporalidad se evalúa con su propio CSV y todo el histórico disponible; no se reconstruye M1",
+  "referencia_senal_jst": "09:55",
+  "entryLeadBars": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "gotobi": [
+    5,
+    10,
+    15,
+    20,
+    25,
+    30
+  ],
+  "ajuste_viernes": true,
+  "ultimo_dia_habil_mes": true,
+  "sl_lookback_tpsl": 33,
+  "escenarios_tpsl": [
+    "parcial_1.1_1.5_2.0",
+    "parcial_1.5_2.0_3.0",
+    "parcial_2.0_3.0_4.0",
+    "tp_unico_1.5",
+    "tp_unico_2.0",
+    "tp_unico_3.0",
+    "tp_unico_4.0"
+  ],
+  "fracciones_parciales": [
+    0.3333,
+    0.3333,
+    0.3334
+  ],
+  "be_despues_tp1": true,
+  "sl_pips_original": [
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35
+  ],
+  "cierres_original_jst": [
+    "10:00",
+    "10:05",
+    "10:10",
+    "10:15",
+    "10:20",
+    "10:25",
+    "10:30"
+  ],
+  "criterio_intrabar": "SL primero",
+  "max_timeframe_minutes": 15,
+  "combinaciones_por_temporalidad": 896,
+  "ranking_principal": "Score de robustez descendente; desempates Profit Factor y R neto descendentes",
+  "minimo_trades_ranking": 1,
+  "metricas_horas_dias_rentables": "descartadas",
+  "archivos_analizados": [
+    "USDJPY_1M.csv"
+  ],
+  "output_dir": "resultados_backtest_reversal_USDJPY_2026_08_12_115458",
+  "fecha_ejecucion": "2026-08-12T12:05:28.112065"
+}

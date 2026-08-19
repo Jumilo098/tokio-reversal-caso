@@ -1,0 +1,10 @@
+Inicio: 2026-08-12T11:54:52.873980
+Script: backtest_reversal_USDJPY
+Versión: 1.2 | entrada al cierre de vela + salida temporal al cierre | TP/SL + Reversal Original | SHORT | JST | score robustez | dashboard HTML
+Autor: Juan Camilo Rico
+Repositorio: https://github.com/Jumilo098/tokio-reversal-caso
+Metodología: entrada al cierre de vela; salida temporal al cierre de la vela objetivo; SL por toque; TP/SL SL-prioritario intrabar.
+Archivo: USDJPY_1m | velas=119030 | extras_ignoradas=[] | path=D:\Backtest\scalping\USDJPY\USDJPY_1M.csv
+Señales USDJPY_1m: N0=24 | N1=24 | N2=24 | N3=24 | N4=24 | N5=24 | N6=24 | N7=24 | N8=24 | N9=24 | N10=24 | N11=24 | N12=24 | N13=24 | N14=24 | N15=24
+Fin: 2026-08-12T12:05:28.111066
+Duración segundos: 635.24

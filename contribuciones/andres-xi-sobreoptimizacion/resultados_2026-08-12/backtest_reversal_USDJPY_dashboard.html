@@ -1,0 +1,4760 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>backtest_reversal_USDJPY</title>
+<style>
+:root{--bg:#080b10;--panel:#111722;--panel2:#151d2a;--text:#e8eef8;--muted:#99a6ba;--accent:#38d17a;--border:#263246;}
+*{box-sizing:border-box} body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#070a0f,#0c111a 40%,#070a0f);color:var(--text)} a{color:inherit;text-decoration:none}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#090d14;border-right:1px solid var(--border);padding:24px 18px;overflow:auto} .logo{font-size:30px;font-weight:800;margin-bottom:8px}
+.subtitle{color:var(--muted);font-size:13px;line-height:1.35;margin-bottom:22px} .nav a{display:block;padding:11px 12px;margin:6px 0;border-radius:12px;color:var(--muted)} .nav a:hover{background:var(--panel2);color:var(--text)}
+.main{margin-left:245px;padding:28px} .hero{border:1px solid var(--border);border-radius:22px;background:radial-gradient(circle at top right,rgba(56,209,122,.18),transparent 36%),var(--panel);padding:28px;margin-bottom:24px}
+.hero h1{margin:0 0 8px;font-size:42px} .hero p{margin:0;color:var(--muted)} .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:22px} .kpi{background:var(--panel2);border:1px solid var(--border);border-radius:18px;padding:16px} .kpi .label{color:var(--muted);font-size:12px} .kpi .value{font-size:24px;font-weight:700;margin-top:6px}
+.panel{background:rgba(17,23,34,.92);border:1px solid var(--border);border-radius:22px;padding:22px;margin:24px 0;box-shadow:0 20px 60px rgba(0,0,0,.25)} .panel h2{margin:0 0 16px} .section-note{color:var(--muted);margin:-6px 0 16px;font-size:13px}
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px} .asset-tile{display:flex;flex-direction:column;gap:7px;padding:18px;border:1px solid var(--border);background:linear-gradient(180deg,#172030,#111722);border-radius:18px;transition:.15s} .asset-tile:hover{transform:translateY(-2px);border-color:var(--accent)} .asset-name{font-size:22px;font-weight:800;color:var(--accent)}
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:18px} .chart-card{background:var(--panel2);border:1px solid var(--border);border-radius:18px;padding:16px} .chart-card h3{margin:0 0 12px;font-size:16px} .chart-card img{width:100%;border-radius:12px;background:#fff}
+.table-wrap{overflow:auto;border-radius:14px;border:1px solid var(--border)} table.data-table{border-collapse:collapse;width:100%;min-width:1100px;background:#0f1520;font-size:13px} table.data-table th{position:sticky;top:0;background:#182235;color:#eaf2ff;text-align:left;padding:10px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap} table.data-table th:hover{background:#22304a} table.data-table th.sort-asc::after{content:" ▲";color:var(--accent);font-size:11px} table.data-table th.sort-desc::after{content:" ▼";color:var(--accent);font-size:11px} table.data-table td{padding:9px 10px;border-bottom:1px solid #202b3d;color:#d6deea;white-space:nowrap} table.data-table tr:nth-child(even) td{background:#111a27}
+.empty{color:var(--muted);padding:18px;background:#101722;border-radius:14px} .footer{color:var(--muted);text-align:center;padding:30px 0} @media(max-width:900px){.sidebar{position:relative;width:auto}.main{margin-left:0}.chart-grid{grid-template-columns:1fr}}
+</style></head><body>
+<aside class="sidebar"><div class="logo">backtest_reversal_USDJPY</div><div class="subtitle">Activo: USDJPY<br>Temporalidades:<br>1m</div><nav class="nav"><a href="#resumen">Inicio</a><a href="#top-global">Top global</a><a href="#temporalidades">Temporalidades</a><a href="#graficas">Gráficas</a><a href="#tablas">Tablas</a><a href="#configuracion">Configuración</a></nav></aside>
+<main class="main"><section id="resumen" class="hero"><h1>backtest_reversal_USDJPY</h1><p>USDJPY · SHORT/SELL · TP/SL + Reversal Original · Asia/Tokyo</p><div class="kpis"><div class="kpi"><div class="label">Temporalidades</div><div class="value">1</div></div><div class="kpi"><div class="label">Top global</div><div class="value">20</div></div><div class="kpi"><div class="label">Estado</div><div class="value">completo</div></div><div class="kpi"><div class="label">Dirección</div><div class="value">SHORT</div></div></div></section>
+<section id="top-global" class="panel"><h2>Top global · Mejor rentabilidad</h2><p class="section-note">Ranking principal por score de robustez; Profit Factor y R neto se utilizan como desempates. Las familias se muestran en tablas separadas cuando coexisten en el Top global. Puede hacer clic en cualquier encabezado para ordenar.</p><h3>TP/SL</h3><div class="table-wrap"><table border="1" class="dataframe data-table sortable-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ranking_global</th>
+      <th>activo</th>
+      <th>temporalidad</th>
+      <th>direccion_analizada</th>
+      <th>familia_salida</th>
+      <th>entryLeadBars</th>
+      <th>hora_referencia_jst</th>
+      <th>sl_lookback</th>
+      <th>tipo_tp</th>
+      <th>tp1_r</th>
+      <th>tp2_r</th>
+      <th>tp3_r</th>
+      <th>total_trades</th>
+      <th>win_rate</th>
+      <th>profit_factor</th>
+      <th>r_neto_total</th>
+      <th>promedio_r_por_trade</th>
+      <th>max_drawdown_r</th>
+      <th>racha_max_perdidas</th>
+      <th>score_robustez</th>
+      <th>avg_r_ganadoras</th>
+      <th>avg_r_perdedoras</th>
+      <th>payoff_ratio</th>
+      <th>cantidad_velas</th>
+      <th>dias_historico</th>
+      <th>meses_historico</th>
+      <th>trades_por_1000_velas</th>
+      <th>r_por_1000_velas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>18</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>TP/SL</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>33</td>
+      <td>tp_unico_4.0</td>
+      <td>4,00</td>
+      <td></td>
+      <td></td>
+      <td>23</td>
+      <td>43,48%</td>
+      <td>3,08</td>
+      <td>27,00</td>
+      <td>1,17</td>
+      <td>-4,00</td>
+      <td>4</td>
+      <td>59,18</td>
+      <td>4,00</td>
+      <td>-1,00</td>
+      <td>4,00</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,19</td>
+      <td>0,23</td>
+    </tr>
+  </tbody>
+</table></div>
+<h3 style="margin-top:20px">Reversal Original</h3><div class="table-wrap"><table border="1" class="dataframe data-table sortable-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ranking_global</th>
+      <th>activo</th>
+      <th>temporalidad</th>
+      <th>direccion_analizada</th>
+      <th>familia_salida</th>
+      <th>entryLeadBars</th>
+      <th>hora_referencia_jst</th>
+      <th>sl_pips</th>
+      <th>hora_cierre_objetivo_jst</th>
+      <th>total_trades</th>
+      <th>win_rate</th>
+      <th>profit_factor</th>
+      <th>r_neto_total</th>
+      <th>promedio_r_por_trade</th>
+      <th>max_drawdown_r</th>
+      <th>racha_max_perdidas</th>
+      <th>score_robustez</th>
+      <th>avg_r_ganadoras</th>
+      <th>avg_r_perdedoras</th>
+      <th>payoff_ratio</th>
+      <th>cantidad_velas</th>
+      <th>dias_historico</th>
+      <th>meses_historico</th>
+      <th>trades_por_1000_velas</th>
+      <th>r_por_1000_velas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>66,67%</td>
+      <td>4,77</td>
+      <td>27,36</td>
+      <td>1,14</td>
+      <td>-3,22</td>
+      <td>2</td>
+      <td>73,43</td>
+      <td>2,16</td>
+      <td>-0,91</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>66,67%</td>
+      <td>4,75</td>
+      <td>27,98</td>
+      <td>1,17</td>
+      <td>-3,42</td>
+      <td>2</td>
+      <td>73,18</td>
+      <td>2,21</td>
+      <td>-0,93</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,24</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>65,22%</td>
+      <td>4,67</td>
+      <td>27,92</td>
+      <td>1,16</td>
+      <td>-3,56</td>
+      <td>2</td>
+      <td>72,44</td>
+      <td>2,37</td>
+      <td>-0,95</td>
+      <td>2,49</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,40</td>
+      <td>27,30</td>
+      <td>1,14</td>
+      <td>-3,36</td>
+      <td>2</td>
+      <td>70,39</td>
+      <td>2,52</td>
+      <td>-0,80</td>
+      <td>3,15</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>62,50%</td>
+      <td>4,33</td>
+      <td>27,42</td>
+      <td>1,14</td>
+      <td>-4,24</td>
+      <td>5</td>
+      <td>69,10</td>
+      <td>2,38</td>
+      <td>-0,92</td>
+      <td>2,60</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,31</td>
+      <td>27,50</td>
+      <td>1,15</td>
+      <td>-4,30</td>
+      <td>6</td>
+      <td>68,95</td>
+      <td>2,56</td>
+      <td>-0,83</td>
+      <td>3,08</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,26</td>
+      <td>26,28</td>
+      <td>1,09</td>
+      <td>-4,02</td>
+      <td>5</td>
+      <td>68,61</td>
+      <td>2,45</td>
+      <td>-0,81</td>
+      <td>3,04</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,22</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>11</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,93</td>
+      <td>25,00</td>
+      <td>1,04</td>
+      <td>-3,54</td>
+      <td>5</td>
+      <td>66,20</td>
+      <td>2,40</td>
+      <td>-0,85</td>
+      <td>2,81</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,21</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,93</td>
+      <td>26,36</td>
+      <td>1,10</td>
+      <td>-4,02</td>
+      <td>5</td>
+      <td>65,97</td>
+      <td>2,72</td>
+      <td>-0,82</td>
+      <td>3,32</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,22</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>10</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,84</td>
+      <td>23,66</td>
+      <td>0,99</td>
+      <td>-4,24</td>
+      <td>5</td>
+      <td>64,51</td>
+      <td>2,29</td>
+      <td>-0,83</td>
+      <td>2,74</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,67</td>
+      <td>23,50</td>
+      <td>0,98</td>
+      <td>-3,80</td>
+      <td>5</td>
+      <td>63,37</td>
+      <td>2,31</td>
+      <td>-0,88</td>
+      <td>2,62</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>11</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>47,83%</td>
+      <td>3,59</td>
+      <td>24,92</td>
+      <td>1,04</td>
+      <td>-3,68</td>
+      <td>5</td>
+      <td>63,34</td>
+      <td>3,14</td>
+      <td>-0,80</td>
+      <td>3,91</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,21</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,62</td>
+      <td>23,60</td>
+      <td>0,98</td>
+      <td>-4,02</td>
+      <td>6</td>
+      <td>62,86</td>
+      <td>2,51</td>
+      <td>-0,82</td>
+      <td>3,06</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>1</td>
+      <td>09:55</td>
+      <td>10,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>4,78</td>
+      <td>10,18</td>
+      <td>0,42</td>
+      <td>-1,01</td>
+      <td>4</td>
+      <td>62,60</td>
+      <td>0,99</td>
+      <td>-0,24</td>
+      <td>4,05</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,09</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>10</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>50,00%</td>
+      <td>3,50</td>
+      <td>23,74</td>
+      <td>0,99</td>
+      <td>-4,26</td>
+      <td>6</td>
+      <td>61,87</td>
+      <td>2,77</td>
+      <td>-0,79</td>
+      <td>3,50</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>1</td>
+      <td>09:55</td>
+      <td>10,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,21</td>
+      <td>12,15</td>
+      <td>0,51</td>
+      <td>-1,22</td>
+      <td>2</td>
+      <td>59,62</td>
+      <td>1,14</td>
+      <td>-0,38</td>
+      <td>3,01</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,10</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,33</td>
+      <td>23,02</td>
+      <td>0,96</td>
+      <td>-4,90</td>
+      <td>6</td>
+      <td>59,35</td>
+      <td>2,53</td>
+      <td>-0,90</td>
+      <td>2,81</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,19</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,33</td>
+      <td>22,30</td>
+      <td>0,93</td>
+      <td>-4,58</td>
+      <td>5</td>
+      <td>58,92</td>
+      <td>2,28</td>
+      <td>-0,96</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,19</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:10</td>
+      <td>24</td>
+      <td>62,50%</td>
+      <td>3,51</td>
+      <td>19,28</td>
+      <td>0,80</td>
+      <td>-3,68</td>
+      <td>5</td>
+      <td>58,24</td>
+      <td>1,80</td>
+      <td>-0,85</td>
+      <td>2,11</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,16</td>
+    </tr>
+  </tbody>
+</table></div></section>
+<section id="temporalidades" class="panel"><h2>Temporalidades</h2><div class="asset-grid"><a class="asset-tile" href="#tf-1m">
+                <span class="asset-name">1m</span>
+                <span>PF: 4.77</span>
+                <span>R neto: 27.36</span>
+                <span>Trades: 24</span>
+            </a></div></section><section id="tf-1m" class="panel">
+                <h2>1m · Top rentabilidad</h2>
+                <p class="section-note">Top 20 de esta temporalidad por score de robustez; Profit Factor y R neto se utilizan como desempates. Las familias se separan cuando ambas aparecen en el ranking.</p>
+<h3>TP/SL</h3><div class="table-wrap"><table border="1" class="dataframe data-table sortable-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ranking_temporalidad</th>
+      <th>activo</th>
+      <th>temporalidad</th>
+      <th>direccion_analizada</th>
+      <th>familia_salida</th>
+      <th>entryLeadBars</th>
+      <th>hora_referencia_jst</th>
+      <th>sl_lookback</th>
+      <th>tipo_tp</th>
+      <th>tp1_r</th>
+      <th>tp2_r</th>
+      <th>tp3_r</th>
+      <th>total_trades</th>
+      <th>win_rate</th>
+      <th>profit_factor</th>
+      <th>r_neto_total</th>
+      <th>promedio_r_por_trade</th>
+      <th>max_drawdown_r</th>
+      <th>racha_max_perdidas</th>
+      <th>score_robustez</th>
+      <th>avg_r_ganadoras</th>
+      <th>avg_r_perdedoras</th>
+      <th>payoff_ratio</th>
+      <th>cantidad_velas</th>
+      <th>dias_historico</th>
+      <th>meses_historico</th>
+      <th>trades_por_1000_velas</th>
+      <th>r_por_1000_velas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>18</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>TP/SL</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>33</td>
+      <td>tp_unico_4.0</td>
+      <td>4,00</td>
+      <td></td>
+      <td></td>
+      <td>23</td>
+      <td>43,48%</td>
+      <td>3,08</td>
+      <td>27,00</td>
+      <td>1,17</td>
+      <td>-4,00</td>
+      <td>4</td>
+      <td>59,18</td>
+      <td>4,00</td>
+      <td>-1,00</td>
+      <td>4,00</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,19</td>
+      <td>0,23</td>
+    </tr>
+  </tbody>
+</table></div>
+<h3 style="margin-top:20px">Reversal Original</h3><div class="table-wrap"><table border="1" class="dataframe data-table sortable-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ranking_temporalidad</th>
+      <th>activo</th>
+      <th>temporalidad</th>
+      <th>direccion_analizada</th>
+      <th>familia_salida</th>
+      <th>entryLeadBars</th>
+      <th>hora_referencia_jst</th>
+      <th>sl_pips</th>
+      <th>hora_cierre_objetivo_jst</th>
+      <th>total_trades</th>
+      <th>win_rate</th>
+      <th>profit_factor</th>
+      <th>r_neto_total</th>
+      <th>promedio_r_por_trade</th>
+      <th>max_drawdown_r</th>
+      <th>racha_max_perdidas</th>
+      <th>score_robustez</th>
+      <th>avg_r_ganadoras</th>
+      <th>avg_r_perdedoras</th>
+      <th>payoff_ratio</th>
+      <th>cantidad_velas</th>
+      <th>dias_historico</th>
+      <th>meses_historico</th>
+      <th>trades_por_1000_velas</th>
+      <th>r_por_1000_velas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>66,67%</td>
+      <td>4,77</td>
+      <td>27,36</td>
+      <td>1,14</td>
+      <td>-3,22</td>
+      <td>2</td>
+      <td>73,43</td>
+      <td>2,16</td>
+      <td>-0,91</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>66,67%</td>
+      <td>4,75</td>
+      <td>27,98</td>
+      <td>1,17</td>
+      <td>-3,42</td>
+      <td>2</td>
+      <td>73,18</td>
+      <td>2,21</td>
+      <td>-0,93</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,24</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>65,22%</td>
+      <td>4,67</td>
+      <td>27,92</td>
+      <td>1,16</td>
+      <td>-3,56</td>
+      <td>2</td>
+      <td>72,44</td>
+      <td>2,37</td>
+      <td>-0,95</td>
+      <td>2,49</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,40</td>
+      <td>27,30</td>
+      <td>1,14</td>
+      <td>-3,36</td>
+      <td>2</td>
+      <td>70,39</td>
+      <td>2,52</td>
+      <td>-0,80</td>
+      <td>3,15</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>62,50%</td>
+      <td>4,33</td>
+      <td>27,42</td>
+      <td>1,14</td>
+      <td>-4,24</td>
+      <td>5</td>
+      <td>69,10</td>
+      <td>2,38</td>
+      <td>-0,92</td>
+      <td>2,60</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,31</td>
+      <td>27,50</td>
+      <td>1,15</td>
+      <td>-4,30</td>
+      <td>6</td>
+      <td>68,95</td>
+      <td>2,56</td>
+      <td>-0,83</td>
+      <td>3,08</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,26</td>
+      <td>26,28</td>
+      <td>1,09</td>
+      <td>-4,02</td>
+      <td>5</td>
+      <td>68,61</td>
+      <td>2,45</td>
+      <td>-0,81</td>
+      <td>3,04</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,22</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>11</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,93</td>
+      <td>25,00</td>
+      <td>1,04</td>
+      <td>-3,54</td>
+      <td>5</td>
+      <td>66,20</td>
+      <td>2,40</td>
+      <td>-0,85</td>
+      <td>2,81</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,21</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,93</td>
+      <td>26,36</td>
+      <td>1,10</td>
+      <td>-4,02</td>
+      <td>5</td>
+      <td>65,97</td>
+      <td>2,72</td>
+      <td>-0,82</td>
+      <td>3,32</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,22</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>10</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,84</td>
+      <td>23,66</td>
+      <td>0,99</td>
+      <td>-4,24</td>
+      <td>5</td>
+      <td>64,51</td>
+      <td>2,29</td>
+      <td>-0,83</td>
+      <td>2,74</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,67</td>
+      <td>23,50</td>
+      <td>0,98</td>
+      <td>-3,80</td>
+      <td>5</td>
+      <td>63,37</td>
+      <td>2,31</td>
+      <td>-0,88</td>
+      <td>2,62</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>11</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>47,83%</td>
+      <td>3,59</td>
+      <td>24,92</td>
+      <td>1,04</td>
+      <td>-3,68</td>
+      <td>5</td>
+      <td>63,34</td>
+      <td>3,14</td>
+      <td>-0,80</td>
+      <td>3,91</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,21</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,62</td>
+      <td>23,60</td>
+      <td>0,98</td>
+      <td>-4,02</td>
+      <td>6</td>
+      <td>62,86</td>
+      <td>2,51</td>
+      <td>-0,82</td>
+      <td>3,06</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>1</td>
+      <td>09:55</td>
+      <td>10,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>4,78</td>
+      <td>10,18</td>
+      <td>0,42</td>
+      <td>-1,01</td>
+      <td>4</td>
+      <td>62,60</td>
+      <td>0,99</td>
+      <td>-0,24</td>
+      <td>4,05</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,09</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>10</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>50,00%</td>
+      <td>3,50</td>
+      <td>23,74</td>
+      <td>0,99</td>
+      <td>-4,26</td>
+      <td>6</td>
+      <td>61,87</td>
+      <td>2,77</td>
+      <td>-0,79</td>
+      <td>3,50</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>1</td>
+      <td>09:55</td>
+      <td>10,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,21</td>
+      <td>12,15</td>
+      <td>0,51</td>
+      <td>-1,22</td>
+      <td>2</td>
+      <td>59,62</td>
+      <td>1,14</td>
+      <td>-0,38</td>
+      <td>3,01</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,10</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,33</td>
+      <td>23,02</td>
+      <td>0,96</td>
+      <td>-4,90</td>
+      <td>6</td>
+      <td>59,35</td>
+      <td>2,53</td>
+      <td>-0,90</td>
+      <td>2,81</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,19</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,33</td>
+      <td>22,30</td>
+      <td>0,93</td>
+      <td>-4,58</td>
+      <td>5</td>
+      <td>58,92</td>
+      <td>2,28</td>
+      <td>-0,96</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,19</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:10</td>
+      <td>24</td>
+      <td>62,50%</td>
+      <td>3,51</td>
+      <td>19,28</td>
+      <td>0,80</td>
+      <td>-3,68</td>
+      <td>5</td>
+      <td>58,24</td>
+      <td>1,80</td>
+      <td>-0,85</td>
+      <td>2,11</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,16</td>
+    </tr>
+  </tbody>
+</table></div>
+</section>
+<section id="graficas" class="panel"><h2>Gráficas</h2><div class="chart-grid"><div class="chart-card"><h3>top1 equity curve</h3><img src="top1_equity_curve.png" alt="top1 equity curve"></div>
+<div class="chart-card"><h3>top1 drawdown curve</h3><img src="top1_drawdown_curve.png" alt="top1 drawdown curve"></div>
+<div class="chart-card"><h3>top5 equity comparison</h3><img src="top5_equity_comparison.png" alt="top5 equity comparison"></div>
+<div class="chart-card"><h3>top20 pf vs trades</h3><img src="top20_pf_vs_trades.png" alt="top20 pf vs trades"></div>
+<div class="chart-card"><h3>top20 rneto vs drawdown</h3><img src="top20_rneto_vs_drawdown.png" alt="top20 rneto vs drawdown"></div>
+<div class="chart-card"><h3>estabilidad tpsl 1m pf</h3><img src="estabilidad_tpsl_1m_pf.png" alt="estabilidad tpsl 1m pf"></div>
+<div class="chart-card"><h3>estabilidad tpsl 1m r neto</h3><img src="estabilidad_tpsl_1m_r_neto.png" alt="estabilidad tpsl 1m r neto"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1000 pf</h3><img src="estabilidad_original_1m_1000_pf.png" alt="estabilidad original 1m 1000 pf"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1000 r neto</h3><img src="estabilidad_original_1m_1000_r_neto.png" alt="estabilidad original 1m 1000 r neto"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1005 pf</h3><img src="estabilidad_original_1m_1005_pf.png" alt="estabilidad original 1m 1005 pf"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1005 r neto</h3><img src="estabilidad_original_1m_1005_r_neto.png" alt="estabilidad original 1m 1005 r neto"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1010 pf</h3><img src="estabilidad_original_1m_1010_pf.png" alt="estabilidad original 1m 1010 pf"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1010 r neto</h3><img src="estabilidad_original_1m_1010_r_neto.png" alt="estabilidad original 1m 1010 r neto"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1015 pf</h3><img src="estabilidad_original_1m_1015_pf.png" alt="estabilidad original 1m 1015 pf"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1015 r neto</h3><img src="estabilidad_original_1m_1015_r_neto.png" alt="estabilidad original 1m 1015 r neto"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1020 pf</h3><img src="estabilidad_original_1m_1020_pf.png" alt="estabilidad original 1m 1020 pf"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1020 r neto</h3><img src="estabilidad_original_1m_1020_r_neto.png" alt="estabilidad original 1m 1020 r neto"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1025 pf</h3><img src="estabilidad_original_1m_1025_pf.png" alt="estabilidad original 1m 1025 pf"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1025 r neto</h3><img src="estabilidad_original_1m_1025_r_neto.png" alt="estabilidad original 1m 1025 r neto"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1030 pf</h3><img src="estabilidad_original_1m_1030_pf.png" alt="estabilidad original 1m 1030 pf"></div>
+<div class="chart-card"><h3>estabilidad original 1m 1030 r neto</h3><img src="estabilidad_original_1m_1030_r_neto.png" alt="estabilidad original 1m 1030 r neto"></div></div></section>
+<section id="tablas" class="panel"><h2>Top 20 por temporalidad</h2><p class="section-note">Misma selección Top 20 por temporalidad, presentada en tablas compatibles con cada familia de salida.</p><h3>TP/SL</h3><div class="table-wrap"><table border="1" class="dataframe data-table sortable-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ranking_temporalidad</th>
+      <th>activo</th>
+      <th>temporalidad</th>
+      <th>direccion_analizada</th>
+      <th>familia_salida</th>
+      <th>entryLeadBars</th>
+      <th>hora_referencia_jst</th>
+      <th>sl_lookback</th>
+      <th>tipo_tp</th>
+      <th>tp1_r</th>
+      <th>tp2_r</th>
+      <th>tp3_r</th>
+      <th>total_trades</th>
+      <th>win_rate</th>
+      <th>profit_factor</th>
+      <th>r_neto_total</th>
+      <th>promedio_r_por_trade</th>
+      <th>max_drawdown_r</th>
+      <th>racha_max_perdidas</th>
+      <th>score_robustez</th>
+      <th>avg_r_ganadoras</th>
+      <th>avg_r_perdedoras</th>
+      <th>payoff_ratio</th>
+      <th>cantidad_velas</th>
+      <th>dias_historico</th>
+      <th>meses_historico</th>
+      <th>trades_por_1000_velas</th>
+      <th>r_por_1000_velas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>18</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>TP/SL</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>33</td>
+      <td>tp_unico_4.0</td>
+      <td>4,00</td>
+      <td></td>
+      <td></td>
+      <td>23</td>
+      <td>43,48%</td>
+      <td>3,08</td>
+      <td>27,00</td>
+      <td>1,17</td>
+      <td>-4,00</td>
+      <td>4</td>
+      <td>59,18</td>
+      <td>4,00</td>
+      <td>-1,00</td>
+      <td>4,00</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,19</td>
+      <td>0,23</td>
+    </tr>
+  </tbody>
+</table></div><h3 style="margin-top:20px">Reversal Original</h3><div class="table-wrap"><table border="1" class="dataframe data-table sortable-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ranking_temporalidad</th>
+      <th>activo</th>
+      <th>temporalidad</th>
+      <th>direccion_analizada</th>
+      <th>familia_salida</th>
+      <th>entryLeadBars</th>
+      <th>hora_referencia_jst</th>
+      <th>sl_pips</th>
+      <th>hora_cierre_objetivo_jst</th>
+      <th>total_trades</th>
+      <th>win_rate</th>
+      <th>profit_factor</th>
+      <th>r_neto_total</th>
+      <th>promedio_r_por_trade</th>
+      <th>max_drawdown_r</th>
+      <th>racha_max_perdidas</th>
+      <th>score_robustez</th>
+      <th>avg_r_ganadoras</th>
+      <th>avg_r_perdedoras</th>
+      <th>payoff_ratio</th>
+      <th>cantidad_velas</th>
+      <th>dias_historico</th>
+      <th>meses_historico</th>
+      <th>trades_por_1000_velas</th>
+      <th>r_por_1000_velas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>66,67%</td>
+      <td>4,77</td>
+      <td>27,36</td>
+      <td>1,14</td>
+      <td>-3,22</td>
+      <td>2</td>
+      <td>73,43</td>
+      <td>2,16</td>
+      <td>-0,91</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>66,67%</td>
+      <td>4,75</td>
+      <td>27,98</td>
+      <td>1,17</td>
+      <td>-3,42</td>
+      <td>2</td>
+      <td>73,18</td>
+      <td>2,21</td>
+      <td>-0,93</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,24</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>65,22%</td>
+      <td>4,67</td>
+      <td>27,92</td>
+      <td>1,16</td>
+      <td>-3,56</td>
+      <td>2</td>
+      <td>72,44</td>
+      <td>2,37</td>
+      <td>-0,95</td>
+      <td>2,49</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,40</td>
+      <td>27,30</td>
+      <td>1,14</td>
+      <td>-3,36</td>
+      <td>2</td>
+      <td>70,39</td>
+      <td>2,52</td>
+      <td>-0,80</td>
+      <td>3,15</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>62,50%</td>
+      <td>4,33</td>
+      <td>27,42</td>
+      <td>1,14</td>
+      <td>-4,24</td>
+      <td>5</td>
+      <td>69,10</td>
+      <td>2,38</td>
+      <td>-0,92</td>
+      <td>2,60</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,31</td>
+      <td>27,50</td>
+      <td>1,15</td>
+      <td>-4,30</td>
+      <td>6</td>
+      <td>68,95</td>
+      <td>2,56</td>
+      <td>-0,83</td>
+      <td>3,08</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,23</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,26</td>
+      <td>26,28</td>
+      <td>1,09</td>
+      <td>-4,02</td>
+      <td>5</td>
+      <td>68,61</td>
+      <td>2,45</td>
+      <td>-0,81</td>
+      <td>3,04</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,22</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>11</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,93</td>
+      <td>25,00</td>
+      <td>1,04</td>
+      <td>-3,54</td>
+      <td>5</td>
+      <td>66,20</td>
+      <td>2,40</td>
+      <td>-0,85</td>
+      <td>2,81</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,21</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,93</td>
+      <td>26,36</td>
+      <td>1,10</td>
+      <td>-4,02</td>
+      <td>5</td>
+      <td>65,97</td>
+      <td>2,72</td>
+      <td>-0,82</td>
+      <td>3,32</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,22</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>10</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,84</td>
+      <td>23,66</td>
+      <td>0,99</td>
+      <td>-4,24</td>
+      <td>5</td>
+      <td>64,51</td>
+      <td>2,29</td>
+      <td>-0,83</td>
+      <td>2,74</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,67</td>
+      <td>23,50</td>
+      <td>0,98</td>
+      <td>-3,80</td>
+      <td>5</td>
+      <td>63,37</td>
+      <td>2,31</td>
+      <td>-0,88</td>
+      <td>2,62</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>11</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>47,83%</td>
+      <td>3,59</td>
+      <td>24,92</td>
+      <td>1,04</td>
+      <td>-3,68</td>
+      <td>5</td>
+      <td>63,34</td>
+      <td>3,14</td>
+      <td>-0,80</td>
+      <td>3,91</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,21</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,62</td>
+      <td>23,60</td>
+      <td>0,98</td>
+      <td>-4,02</td>
+      <td>6</td>
+      <td>62,86</td>
+      <td>2,51</td>
+      <td>-0,82</td>
+      <td>3,06</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>1</td>
+      <td>09:55</td>
+      <td>10,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>4,78</td>
+      <td>10,18</td>
+      <td>0,42</td>
+      <td>-1,01</td>
+      <td>4</td>
+      <td>62,60</td>
+      <td>0,99</td>
+      <td>-0,24</td>
+      <td>4,05</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,09</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>10</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>50,00%</td>
+      <td>3,50</td>
+      <td>23,74</td>
+      <td>0,99</td>
+      <td>-4,26</td>
+      <td>6</td>
+      <td>61,87</td>
+      <td>2,77</td>
+      <td>-0,79</td>
+      <td>3,50</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,20</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>1</td>
+      <td>09:55</td>
+      <td>10,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>4,21</td>
+      <td>12,15</td>
+      <td>0,51</td>
+      <td>-1,22</td>
+      <td>2</td>
+      <td>59,62</td>
+      <td>1,14</td>
+      <td>-0,38</td>
+      <td>3,01</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,10</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>54,17%</td>
+      <td>3,33</td>
+      <td>23,02</td>
+      <td>0,96</td>
+      <td>-4,90</td>
+      <td>6</td>
+      <td>59,35</td>
+      <td>2,53</td>
+      <td>-0,90</td>
+      <td>2,81</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,19</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>12</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:25</td>
+      <td>24</td>
+      <td>58,33%</td>
+      <td>3,33</td>
+      <td>22,30</td>
+      <td>0,93</td>
+      <td>-4,58</td>
+      <td>5</td>
+      <td>58,92</td>
+      <td>2,28</td>
+      <td>-0,96</td>
+      <td>2,38</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,19</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>cortos / SELL</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td>09:55</td>
+      <td>5,00</td>
+      <td>10:10</td>
+      <td>24</td>
+      <td>62,50%</td>
+      <td>3,51</td>
+      <td>19,28</td>
+      <td>0,80</td>
+      <td>-3,68</td>
+      <td>5</td>
+      <td>58,24</td>
+      <td>1,80</td>
+      <td>-0,85</td>
+      <td>2,11</td>
+      <td>119030</td>
+      <td>114,80</td>
+      <td>3,77</td>
+      <td>0,20</td>
+      <td>0,16</td>
+    </tr>
+  </tbody>
+</table></div></section>
+<section class="panel"><h2>Trade log Top 5</h2><div class="table-wrap"><table border="1" class="dataframe data-table sortable-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ranking_global</th>
+      <th>activo</th>
+      <th>temporalidad</th>
+      <th>familia_salida</th>
+      <th>entryLeadBars</th>
+      <th>tipo_tp</th>
+      <th>sl_pips</th>
+      <th>hora_cierre_objetivo_jst</th>
+      <th>trade_num</th>
+      <th>direccion</th>
+      <th>event_date</th>
+      <th>signal_time</th>
+      <th>entry_time</th>
+      <th>exit_time</th>
+      <th>entry_price</th>
+      <th>exit_price</th>
+      <th>sl_original</th>
+      <th>risk_init</th>
+      <th>r_trade</th>
+      <th>motivo_salida</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>1</td>
+      <td>SELL</td>
+      <td>2026-04-20</td>
+      <td>2026-04-20 09:42:00 JST</td>
+      <td>2026-04-20 09:43:00 JST</td>
+      <td>2026-04-20 10:16:00 JST</td>
+      <td>159,01</td>
+      <td>158,98</td>
+      <td>159,06</td>
+      <td>0,05</td>
+      <td>0,46</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>2</td>
+      <td>SELL</td>
+      <td>2026-04-24</td>
+      <td>2026-04-24 09:42:00 JST</td>
+      <td>2026-04-24 09:43:00 JST</td>
+      <td>2026-04-24 10:16:00 JST</td>
+      <td>159,77</td>
+      <td>159,79</td>
+      <td>159,82</td>
+      <td>0,05</td>
+      <td>-0,26</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>3</td>
+      <td>SELL</td>
+      <td>2026-04-30</td>
+      <td>2026-04-30 09:42:00 JST</td>
+      <td>2026-04-30 09:43:00 JST</td>
+      <td>2026-04-30 09:53:00 JST</td>
+      <td>160,20</td>
+      <td>160,25</td>
+      <td>160,25</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>4</td>
+      <td>SELL</td>
+      <td>2026-05-05</td>
+      <td>2026-05-05 09:42:00 JST</td>
+      <td>2026-05-05 09:43:00 JST</td>
+      <td>2026-05-05 10:16:00 JST</td>
+      <td>157,24</td>
+      <td>157,24</td>
+      <td>157,29</td>
+      <td>0,05</td>
+      <td>0,04</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>5</td>
+      <td>SELL</td>
+      <td>2026-05-08</td>
+      <td>2026-05-08 09:42:00 JST</td>
+      <td>2026-05-08 09:43:00 JST</td>
+      <td>2026-05-08 09:54:00 JST</td>
+      <td>156,92</td>
+      <td>156,97</td>
+      <td>156,97</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>6</td>
+      <td>SELL</td>
+      <td>2026-05-15</td>
+      <td>2026-05-15 09:42:00 JST</td>
+      <td>2026-05-15 09:43:00 JST</td>
+      <td>2026-05-15 09:53:00 JST</td>
+      <td>158,43</td>
+      <td>158,48</td>
+      <td>158,48</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>7</td>
+      <td>SELL</td>
+      <td>2026-05-20</td>
+      <td>2026-05-20 09:42:00 JST</td>
+      <td>2026-05-20 09:43:00 JST</td>
+      <td>2026-05-20 10:16:00 JST</td>
+      <td>159,06</td>
+      <td>159,04</td>
+      <td>159,11</td>
+      <td>0,05</td>
+      <td>0,38</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>8</td>
+      <td>SELL</td>
+      <td>2026-05-25</td>
+      <td>2026-05-25 09:42:00 JST</td>
+      <td>2026-05-25 09:43:00 JST</td>
+      <td>2026-05-25 10:16:00 JST</td>
+      <td>158,93</td>
+      <td>158,83</td>
+      <td>158,98</td>
+      <td>0,05</td>
+      <td>1,98</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>9</td>
+      <td>SELL</td>
+      <td>2026-05-29</td>
+      <td>2026-05-29 09:42:00 JST</td>
+      <td>2026-05-29 09:43:00 JST</td>
+      <td>2026-05-29 10:16:00 JST</td>
+      <td>159,29</td>
+      <td>159,26</td>
+      <td>159,34</td>
+      <td>0,05</td>
+      <td>0,42</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>10</td>
+      <td>SELL</td>
+      <td>2026-06-05</td>
+      <td>2026-06-05 09:42:00 JST</td>
+      <td>2026-06-05 09:43:00 JST</td>
+      <td>2026-06-05 10:16:00 JST</td>
+      <td>159,97</td>
+      <td>159,92</td>
+      <td>160,02</td>
+      <td>0,05</td>
+      <td>0,92</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>11</td>
+      <td>SELL</td>
+      <td>2026-06-10</td>
+      <td>2026-06-10 09:42:00 JST</td>
+      <td>2026-06-10 09:43:00 JST</td>
+      <td>2026-06-10 10:16:00 JST</td>
+      <td>160,39</td>
+      <td>160,34</td>
+      <td>160,44</td>
+      <td>0,05</td>
+      <td>1,00</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>12</td>
+      <td>SELL</td>
+      <td>2026-06-15</td>
+      <td>2026-06-15 09:42:00 JST</td>
+      <td>2026-06-15 09:43:00 JST</td>
+      <td>2026-06-15 09:51:00 JST</td>
+      <td>159,97</td>
+      <td>160,02</td>
+      <td>160,02</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>13</td>
+      <td>SELL</td>
+      <td>2026-06-19</td>
+      <td>2026-06-19 09:42:00 JST</td>
+      <td>2026-06-19 09:43:00 JST</td>
+      <td>2026-06-19 10:16:00 JST</td>
+      <td>161,14</td>
+      <td>161,11</td>
+      <td>161,19</td>
+      <td>0,05</td>
+      <td>0,46</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>14</td>
+      <td>SELL</td>
+      <td>2026-06-25</td>
+      <td>2026-06-25 09:42:00 JST</td>
+      <td>2026-06-25 09:43:00 JST</td>
+      <td>2026-06-25 10:16:00 JST</td>
+      <td>161,74</td>
+      <td>161,71</td>
+      <td>161,79</td>
+      <td>0,05</td>
+      <td>0,60</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>15</td>
+      <td>SELL</td>
+      <td>2026-06-30</td>
+      <td>2026-06-30 09:42:00 JST</td>
+      <td>2026-06-30 09:43:00 JST</td>
+      <td>2026-06-30 09:53:00 JST</td>
+      <td>161,96</td>
+      <td>162,01</td>
+      <td>162,01</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>16</td>
+      <td>SELL</td>
+      <td>2026-07-03</td>
+      <td>2026-07-03 09:42:00 JST</td>
+      <td>2026-07-03 09:43:00 JST</td>
+      <td>2026-07-03 10:16:00 JST</td>
+      <td>161,42</td>
+      <td>161,07</td>
+      <td>161,47</td>
+      <td>0,05</td>
+      <td>6,94</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>17</td>
+      <td>SELL</td>
+      <td>2026-07-10</td>
+      <td>2026-07-10 09:42:00 JST</td>
+      <td>2026-07-10 09:43:00 JST</td>
+      <td>2026-07-10 10:16:00 JST</td>
+      <td>162,33</td>
+      <td>161,71</td>
+      <td>162,38</td>
+      <td>0,05</td>
+      <td>12,42</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>18</td>
+      <td>SELL</td>
+      <td>2026-07-15</td>
+      <td>2026-07-15 09:42:00 JST</td>
+      <td>2026-07-15 09:43:00 JST</td>
+      <td>2026-07-15 10:16:00 JST</td>
+      <td>162,21</td>
+      <td>161,97</td>
+      <td>162,26</td>
+      <td>0,05</td>
+      <td>4,74</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>19</td>
+      <td>SELL</td>
+      <td>2026-07-20</td>
+      <td>2026-07-20 09:42:00 JST</td>
+      <td>2026-07-20 09:43:00 JST</td>
+      <td>2026-07-20 10:16:00 JST</td>
+      <td>162,42</td>
+      <td>162,35</td>
+      <td>162,47</td>
+      <td>0,05</td>
+      <td>1,36</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>20</td>
+      <td>SELL</td>
+      <td>2026-07-24</td>
+      <td>2026-07-24 09:42:00 JST</td>
+      <td>2026-07-24 09:43:00 JST</td>
+      <td>2026-07-24 10:16:00 JST</td>
+      <td>163,90</td>
+      <td>163,85</td>
+      <td>163,95</td>
+      <td>0,05</td>
+      <td>0,88</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>21</td>
+      <td>SELL</td>
+      <td>2026-07-30</td>
+      <td>2026-07-30 09:42:00 JST</td>
+      <td>2026-07-30 09:43:00 JST</td>
+      <td>2026-07-30 10:16:00 JST</td>
+      <td>163,45</td>
+      <td>163,45</td>
+      <td>163,50</td>
+      <td>0,05</td>
+      <td>0,12</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>22</td>
+      <td>SELL</td>
+      <td>2026-07-31</td>
+      <td>2026-07-31 09:42:00 JST</td>
+      <td>2026-07-31 09:43:00 JST</td>
+      <td>2026-07-31 09:46:00 JST</td>
+      <td>160,51</td>
+      <td>160,56</td>
+      <td>160,56</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>23</td>
+      <td>SELL</td>
+      <td>2026-08-05</td>
+      <td>2026-08-05 09:42:00 JST</td>
+      <td>2026-08-05 09:43:00 JST</td>
+      <td>2026-08-05 10:16:00 JST</td>
+      <td>157,64</td>
+      <td>157,55</td>
+      <td>157,69</td>
+      <td>0,05</td>
+      <td>1,90</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>SELL</td>
+      <td>2026-08-10</td>
+      <td>2026-08-10 09:42:00 JST</td>
+      <td>2026-08-10 09:43:00 JST</td>
+      <td>2026-08-10 10:03:00 JST</td>
+      <td>157,93</td>
+      <td>157,98</td>
+      <td>157,98</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>1</td>
+      <td>SELL</td>
+      <td>2026-04-20</td>
+      <td>2026-04-20 09:41:00 JST</td>
+      <td>2026-04-20 09:42:00 JST</td>
+      <td>2026-04-20 10:16:00 JST</td>
+      <td>159,02</td>
+      <td>158,98</td>
+      <td>159,07</td>
+      <td>0,05</td>
+      <td>0,74</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>2</td>
+      <td>SELL</td>
+      <td>2026-04-24</td>
+      <td>2026-04-24 09:41:00 JST</td>
+      <td>2026-04-24 09:42:00 JST</td>
+      <td>2026-04-24 10:16:00 JST</td>
+      <td>159,76</td>
+      <td>159,79</td>
+      <td>159,81</td>
+      <td>0,05</td>
+      <td>-0,46</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>3</td>
+      <td>SELL</td>
+      <td>2026-04-30</td>
+      <td>2026-04-30 09:41:00 JST</td>
+      <td>2026-04-30 09:42:00 JST</td>
+      <td>2026-04-30 09:53:00 JST</td>
+      <td>160,17</td>
+      <td>160,22</td>
+      <td>160,22</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>4</td>
+      <td>SELL</td>
+      <td>2026-05-05</td>
+      <td>2026-05-05 09:41:00 JST</td>
+      <td>2026-05-05 09:42:00 JST</td>
+      <td>2026-05-05 10:16:00 JST</td>
+      <td>157,24</td>
+      <td>157,24</td>
+      <td>157,29</td>
+      <td>0,05</td>
+      <td>0,04</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>5</td>
+      <td>SELL</td>
+      <td>2026-05-08</td>
+      <td>2026-05-08 09:41:00 JST</td>
+      <td>2026-05-08 09:42:00 JST</td>
+      <td>2026-05-08 09:54:00 JST</td>
+      <td>156,90</td>
+      <td>156,95</td>
+      <td>156,95</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>6</td>
+      <td>SELL</td>
+      <td>2026-05-15</td>
+      <td>2026-05-15 09:41:00 JST</td>
+      <td>2026-05-15 09:42:00 JST</td>
+      <td>2026-05-15 09:54:00 JST</td>
+      <td>158,44</td>
+      <td>158,49</td>
+      <td>158,49</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>7</td>
+      <td>SELL</td>
+      <td>2026-05-20</td>
+      <td>2026-05-20 09:41:00 JST</td>
+      <td>2026-05-20 09:42:00 JST</td>
+      <td>2026-05-20 10:16:00 JST</td>
+      <td>159,05</td>
+      <td>159,04</td>
+      <td>159,10</td>
+      <td>0,05</td>
+      <td>0,22</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>8</td>
+      <td>SELL</td>
+      <td>2026-05-25</td>
+      <td>2026-05-25 09:41:00 JST</td>
+      <td>2026-05-25 09:42:00 JST</td>
+      <td>2026-05-25 10:16:00 JST</td>
+      <td>158,91</td>
+      <td>158,83</td>
+      <td>158,97</td>
+      <td>0,05</td>
+      <td>1,78</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>9</td>
+      <td>SELL</td>
+      <td>2026-05-29</td>
+      <td>2026-05-29 09:41:00 JST</td>
+      <td>2026-05-29 09:42:00 JST</td>
+      <td>2026-05-29 10:16:00 JST</td>
+      <td>159,29</td>
+      <td>159,26</td>
+      <td>159,34</td>
+      <td>0,05</td>
+      <td>0,52</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>10</td>
+      <td>SELL</td>
+      <td>2026-06-05</td>
+      <td>2026-06-05 09:41:00 JST</td>
+      <td>2026-06-05 09:42:00 JST</td>
+      <td>2026-06-05 10:16:00 JST</td>
+      <td>159,96</td>
+      <td>159,92</td>
+      <td>160,01</td>
+      <td>0,05</td>
+      <td>0,78</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>11</td>
+      <td>SELL</td>
+      <td>2026-06-10</td>
+      <td>2026-06-10 09:41:00 JST</td>
+      <td>2026-06-10 09:42:00 JST</td>
+      <td>2026-06-10 10:16:00 JST</td>
+      <td>160,39</td>
+      <td>160,34</td>
+      <td>160,44</td>
+      <td>0,05</td>
+      <td>0,92</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>12</td>
+      <td>SELL</td>
+      <td>2026-06-15</td>
+      <td>2026-06-15 09:41:00 JST</td>
+      <td>2026-06-15 09:42:00 JST</td>
+      <td>2026-06-15 09:51:00 JST</td>
+      <td>159,96</td>
+      <td>160,01</td>
+      <td>160,01</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>13</td>
+      <td>SELL</td>
+      <td>2026-06-19</td>
+      <td>2026-06-19 09:41:00 JST</td>
+      <td>2026-06-19 09:42:00 JST</td>
+      <td>2026-06-19 10:16:00 JST</td>
+      <td>161,15</td>
+      <td>161,11</td>
+      <td>161,20</td>
+      <td>0,05</td>
+      <td>0,76</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>14</td>
+      <td>SELL</td>
+      <td>2026-06-25</td>
+      <td>2026-06-25 09:41:00 JST</td>
+      <td>2026-06-25 09:42:00 JST</td>
+      <td>2026-06-25 10:16:00 JST</td>
+      <td>161,74</td>
+      <td>161,71</td>
+      <td>161,79</td>
+      <td>0,05</td>
+      <td>0,64</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>15</td>
+      <td>SELL</td>
+      <td>2026-06-30</td>
+      <td>2026-06-30 09:41:00 JST</td>
+      <td>2026-06-30 09:42:00 JST</td>
+      <td>2026-06-30 09:53:00 JST</td>
+      <td>161,95</td>
+      <td>162,00</td>
+      <td>162,00</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>16</td>
+      <td>SELL</td>
+      <td>2026-07-03</td>
+      <td>2026-07-03 09:41:00 JST</td>
+      <td>2026-07-03 09:42:00 JST</td>
+      <td>2026-07-03 10:16:00 JST</td>
+      <td>161,43</td>
+      <td>161,07</td>
+      <td>161,48</td>
+      <td>0,05</td>
+      <td>7,14</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>17</td>
+      <td>SELL</td>
+      <td>2026-07-10</td>
+      <td>2026-07-10 09:41:00 JST</td>
+      <td>2026-07-10 09:42:00 JST</td>
+      <td>2026-07-10 10:16:00 JST</td>
+      <td>162,37</td>
+      <td>161,71</td>
+      <td>162,42</td>
+      <td>0,05</td>
+      <td>13,16</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>18</td>
+      <td>SELL</td>
+      <td>2026-07-15</td>
+      <td>2026-07-15 09:41:00 JST</td>
+      <td>2026-07-15 09:42:00 JST</td>
+      <td>2026-07-15 10:16:00 JST</td>
+      <td>162,19</td>
+      <td>161,97</td>
+      <td>162,24</td>
+      <td>0,05</td>
+      <td>4,48</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>19</td>
+      <td>SELL</td>
+      <td>2026-07-20</td>
+      <td>2026-07-20 09:41:00 JST</td>
+      <td>2026-07-20 09:42:00 JST</td>
+      <td>2026-07-20 10:16:00 JST</td>
+      <td>162,41</td>
+      <td>162,35</td>
+      <td>162,46</td>
+      <td>0,05</td>
+      <td>1,18</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>20</td>
+      <td>SELL</td>
+      <td>2026-07-24</td>
+      <td>2026-07-24 09:41:00 JST</td>
+      <td>2026-07-24 09:42:00 JST</td>
+      <td>2026-07-24 10:16:00 JST</td>
+      <td>163,90</td>
+      <td>163,85</td>
+      <td>163,95</td>
+      <td>0,05</td>
+      <td>0,84</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>21</td>
+      <td>SELL</td>
+      <td>2026-07-30</td>
+      <td>2026-07-30 09:41:00 JST</td>
+      <td>2026-07-30 09:42:00 JST</td>
+      <td>2026-07-30 10:16:00 JST</td>
+      <td>163,48</td>
+      <td>163,45</td>
+      <td>163,53</td>
+      <td>0,05</td>
+      <td>0,64</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>22</td>
+      <td>SELL</td>
+      <td>2026-07-31</td>
+      <td>2026-07-31 09:41:00 JST</td>
+      <td>2026-07-31 09:42:00 JST</td>
+      <td>2026-07-31 09:46:00 JST</td>
+      <td>160,52</td>
+      <td>160,57</td>
+      <td>160,57</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>23</td>
+      <td>SELL</td>
+      <td>2026-08-05</td>
+      <td>2026-08-05 09:41:00 JST</td>
+      <td>2026-08-05 09:42:00 JST</td>
+      <td>2026-08-05 10:16:00 JST</td>
+      <td>157,63</td>
+      <td>157,55</td>
+      <td>157,68</td>
+      <td>0,05</td>
+      <td>1,60</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>SELL</td>
+      <td>2026-08-10</td>
+      <td>2026-08-10 09:41:00 JST</td>
+      <td>2026-08-10 09:42:00 JST</td>
+      <td>2026-08-10 10:03:00 JST</td>
+      <td>157,92</td>
+      <td>157,97</td>
+      <td>157,97</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>1</td>
+      <td>SELL</td>
+      <td>2026-04-20</td>
+      <td>2026-04-20 09:41:00 JST</td>
+      <td>2026-04-20 09:42:00 JST</td>
+      <td>2026-04-20 10:21:00 JST</td>
+      <td>159,02</td>
+      <td>158,97</td>
+      <td>159,07</td>
+      <td>0,05</td>
+      <td>1,00</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>2</td>
+      <td>SELL</td>
+      <td>2026-04-24</td>
+      <td>2026-04-24 09:41:00 JST</td>
+      <td>2026-04-24 09:42:00 JST</td>
+      <td>2026-04-24 10:21:00 JST</td>
+      <td>159,76</td>
+      <td>159,79</td>
+      <td>159,81</td>
+      <td>0,05</td>
+      <td>-0,60</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>3</td>
+      <td>SELL</td>
+      <td>2026-04-30</td>
+      <td>2026-04-30 09:41:00 JST</td>
+      <td>2026-04-30 09:42:00 JST</td>
+      <td>2026-04-30 09:53:00 JST</td>
+      <td>160,17</td>
+      <td>160,22</td>
+      <td>160,22</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>4</td>
+      <td>SELL</td>
+      <td>2026-05-05</td>
+      <td>2026-05-05 09:41:00 JST</td>
+      <td>2026-05-05 09:42:00 JST</td>
+      <td>2026-05-05 10:21:00 JST</td>
+      <td>157,24</td>
+      <td>157,24</td>
+      <td>157,29</td>
+      <td>0,05</td>
+      <td>0,04</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>5</td>
+      <td>SELL</td>
+      <td>2026-05-08</td>
+      <td>2026-05-08 09:41:00 JST</td>
+      <td>2026-05-08 09:42:00 JST</td>
+      <td>2026-05-08 09:54:00 JST</td>
+      <td>156,90</td>
+      <td>156,95</td>
+      <td>156,95</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>6</td>
+      <td>SELL</td>
+      <td>2026-05-15</td>
+      <td>2026-05-15 09:41:00 JST</td>
+      <td>2026-05-15 09:42:00 JST</td>
+      <td>2026-05-15 09:54:00 JST</td>
+      <td>158,44</td>
+      <td>158,49</td>
+      <td>158,49</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>7</td>
+      <td>SELL</td>
+      <td>2026-05-20</td>
+      <td>2026-05-20 09:41:00 JST</td>
+      <td>2026-05-20 09:42:00 JST</td>
+      <td>2026-05-20 10:21:00 JST</td>
+      <td>159,05</td>
+      <td>159,05</td>
+      <td>159,10</td>
+      <td>0,05</td>
+      <td>0,02</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>8</td>
+      <td>SELL</td>
+      <td>2026-05-25</td>
+      <td>2026-05-25 09:41:00 JST</td>
+      <td>2026-05-25 09:42:00 JST</td>
+      <td>2026-05-25 10:21:00 JST</td>
+      <td>158,91</td>
+      <td>158,81</td>
+      <td>158,97</td>
+      <td>0,05</td>
+      <td>2,16</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>9</td>
+      <td>SELL</td>
+      <td>2026-05-29</td>
+      <td>2026-05-29 09:41:00 JST</td>
+      <td>2026-05-29 09:42:00 JST</td>
+      <td>2026-05-29 10:21:00 JST</td>
+      <td>159,29</td>
+      <td>159,26</td>
+      <td>159,34</td>
+      <td>0,05</td>
+      <td>0,54</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>10</td>
+      <td>SELL</td>
+      <td>2026-06-05</td>
+      <td>2026-06-05 09:41:00 JST</td>
+      <td>2026-06-05 09:42:00 JST</td>
+      <td>2026-06-05 10:21:00 JST</td>
+      <td>159,96</td>
+      <td>159,93</td>
+      <td>160,01</td>
+      <td>0,05</td>
+      <td>0,58</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>11</td>
+      <td>SELL</td>
+      <td>2026-06-10</td>
+      <td>2026-06-10 09:41:00 JST</td>
+      <td>2026-06-10 09:42:00 JST</td>
+      <td>2026-06-10 10:21:00 JST</td>
+      <td>160,39</td>
+      <td>160,36</td>
+      <td>160,44</td>
+      <td>0,05</td>
+      <td>0,64</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>12</td>
+      <td>SELL</td>
+      <td>2026-06-15</td>
+      <td>2026-06-15 09:41:00 JST</td>
+      <td>2026-06-15 09:42:00 JST</td>
+      <td>2026-06-15 09:51:00 JST</td>
+      <td>159,96</td>
+      <td>160,01</td>
+      <td>160,01</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>13</td>
+      <td>SELL</td>
+      <td>2026-06-19</td>
+      <td>2026-06-19 09:41:00 JST</td>
+      <td>2026-06-19 09:42:00 JST</td>
+      <td>2026-06-19 10:21:00 JST</td>
+      <td>161,15</td>
+      <td>161,14</td>
+      <td>161,20</td>
+      <td>0,05</td>
+      <td>0,20</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>14</td>
+      <td>SELL</td>
+      <td>2026-06-25</td>
+      <td>2026-06-25 09:41:00 JST</td>
+      <td>2026-06-25 09:42:00 JST</td>
+      <td>2026-06-25 10:21:00 JST</td>
+      <td>161,74</td>
+      <td>161,67</td>
+      <td>161,79</td>
+      <td>0,05</td>
+      <td>1,52</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>15</td>
+      <td>SELL</td>
+      <td>2026-06-30</td>
+      <td>2026-06-30 09:41:00 JST</td>
+      <td>2026-06-30 09:42:00 JST</td>
+      <td>2026-06-30 09:53:00 JST</td>
+      <td>161,95</td>
+      <td>162,00</td>
+      <td>162,00</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>16</td>
+      <td>SELL</td>
+      <td>2026-07-03</td>
+      <td>2026-07-03 09:41:00 JST</td>
+      <td>2026-07-03 09:42:00 JST</td>
+      <td>2026-07-03 10:21:00 JST</td>
+      <td>161,43</td>
+      <td>160,94</td>
+      <td>161,48</td>
+      <td>0,05</td>
+      <td>9,90</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>17</td>
+      <td>SELL</td>
+      <td>2026-07-10</td>
+      <td>2026-07-10 09:41:00 JST</td>
+      <td>2026-07-10 09:42:00 JST</td>
+      <td>2026-07-10 10:21:00 JST</td>
+      <td>162,37</td>
+      <td>161,77</td>
+      <td>162,42</td>
+      <td>0,05</td>
+      <td>11,90</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>18</td>
+      <td>SELL</td>
+      <td>2026-07-15</td>
+      <td>2026-07-15 09:41:00 JST</td>
+      <td>2026-07-15 09:42:00 JST</td>
+      <td>2026-07-15 10:21:00 JST</td>
+      <td>162,19</td>
+      <td>162,01</td>
+      <td>162,24</td>
+      <td>0,05</td>
+      <td>3,60</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>19</td>
+      <td>SELL</td>
+      <td>2026-07-20</td>
+      <td>2026-07-20 09:41:00 JST</td>
+      <td>2026-07-20 09:42:00 JST</td>
+      <td>2026-07-20 10:21:00 JST</td>
+      <td>162,41</td>
+      <td>162,39</td>
+      <td>162,46</td>
+      <td>0,05</td>
+      <td>0,46</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>20</td>
+      <td>SELL</td>
+      <td>2026-07-24</td>
+      <td>2026-07-24 09:41:00 JST</td>
+      <td>2026-07-24 09:42:00 JST</td>
+      <td>2026-07-24 10:21:00 JST</td>
+      <td>163,90</td>
+      <td>163,81</td>
+      <td>163,95</td>
+      <td>0,05</td>
+      <td>1,78</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>21</td>
+      <td>SELL</td>
+      <td>2026-07-30</td>
+      <td>2026-07-30 09:41:00 JST</td>
+      <td>2026-07-30 09:42:00 JST</td>
+      <td>2026-07-30 10:21:00 JST</td>
+      <td>163,48</td>
+      <td>163,48</td>
+      <td>163,53</td>
+      <td>0,05</td>
+      <td>0,00</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>22</td>
+      <td>SELL</td>
+      <td>2026-07-31</td>
+      <td>2026-07-31 09:41:00 JST</td>
+      <td>2026-07-31 09:42:00 JST</td>
+      <td>2026-07-31 09:46:00 JST</td>
+      <td>160,52</td>
+      <td>160,57</td>
+      <td>160,57</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>23</td>
+      <td>SELL</td>
+      <td>2026-08-05</td>
+      <td>2026-08-05 09:41:00 JST</td>
+      <td>2026-08-05 09:42:00 JST</td>
+      <td>2026-08-05 10:21:00 JST</td>
+      <td>157,63</td>
+      <td>157,57</td>
+      <td>157,68</td>
+      <td>0,05</td>
+      <td>1,18</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>14</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>SELL</td>
+      <td>2026-08-10</td>
+      <td>2026-08-10 09:41:00 JST</td>
+      <td>2026-08-10 09:42:00 JST</td>
+      <td>2026-08-10 10:03:00 JST</td>
+      <td>157,92</td>
+      <td>157,97</td>
+      <td>157,97</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>1</td>
+      <td>SELL</td>
+      <td>2026-04-20</td>
+      <td>2026-04-20 09:42:00 JST</td>
+      <td>2026-04-20 09:43:00 JST</td>
+      <td>2026-04-20 10:21:00 JST</td>
+      <td>159,01</td>
+      <td>158,97</td>
+      <td>159,06</td>
+      <td>0,05</td>
+      <td>0,72</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>2</td>
+      <td>SELL</td>
+      <td>2026-04-24</td>
+      <td>2026-04-24 09:42:00 JST</td>
+      <td>2026-04-24 09:43:00 JST</td>
+      <td>2026-04-24 10:21:00 JST</td>
+      <td>159,77</td>
+      <td>159,79</td>
+      <td>159,82</td>
+      <td>0,05</td>
+      <td>-0,40</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>3</td>
+      <td>SELL</td>
+      <td>2026-04-30</td>
+      <td>2026-04-30 09:42:00 JST</td>
+      <td>2026-04-30 09:43:00 JST</td>
+      <td>2026-04-30 09:53:00 JST</td>
+      <td>160,20</td>
+      <td>160,25</td>
+      <td>160,25</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>4</td>
+      <td>SELL</td>
+      <td>2026-05-05</td>
+      <td>2026-05-05 09:42:00 JST</td>
+      <td>2026-05-05 09:43:00 JST</td>
+      <td>2026-05-05 10:21:00 JST</td>
+      <td>157,24</td>
+      <td>157,24</td>
+      <td>157,29</td>
+      <td>0,05</td>
+      <td>0,04</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>5</td>
+      <td>SELL</td>
+      <td>2026-05-08</td>
+      <td>2026-05-08 09:42:00 JST</td>
+      <td>2026-05-08 09:43:00 JST</td>
+      <td>2026-05-08 09:54:00 JST</td>
+      <td>156,92</td>
+      <td>156,97</td>
+      <td>156,97</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>6</td>
+      <td>SELL</td>
+      <td>2026-05-15</td>
+      <td>2026-05-15 09:42:00 JST</td>
+      <td>2026-05-15 09:43:00 JST</td>
+      <td>2026-05-15 09:53:00 JST</td>
+      <td>158,43</td>
+      <td>158,48</td>
+      <td>158,48</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>7</td>
+      <td>SELL</td>
+      <td>2026-05-20</td>
+      <td>2026-05-20 09:42:00 JST</td>
+      <td>2026-05-20 09:43:00 JST</td>
+      <td>2026-05-20 10:21:00 JST</td>
+      <td>159,06</td>
+      <td>159,05</td>
+      <td>159,11</td>
+      <td>0,05</td>
+      <td>0,18</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>8</td>
+      <td>SELL</td>
+      <td>2026-05-25</td>
+      <td>2026-05-25 09:42:00 JST</td>
+      <td>2026-05-25 09:43:00 JST</td>
+      <td>2026-05-25 10:21:00 JST</td>
+      <td>158,93</td>
+      <td>158,81</td>
+      <td>158,98</td>
+      <td>0,05</td>
+      <td>2,36</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>9</td>
+      <td>SELL</td>
+      <td>2026-05-29</td>
+      <td>2026-05-29 09:42:00 JST</td>
+      <td>2026-05-29 09:43:00 JST</td>
+      <td>2026-05-29 10:21:00 JST</td>
+      <td>159,29</td>
+      <td>159,26</td>
+      <td>159,34</td>
+      <td>0,05</td>
+      <td>0,44</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>10</td>
+      <td>SELL</td>
+      <td>2026-06-05</td>
+      <td>2026-06-05 09:42:00 JST</td>
+      <td>2026-06-05 09:43:00 JST</td>
+      <td>2026-06-05 10:21:00 JST</td>
+      <td>159,97</td>
+      <td>159,93</td>
+      <td>160,02</td>
+      <td>0,05</td>
+      <td>0,72</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>11</td>
+      <td>SELL</td>
+      <td>2026-06-10</td>
+      <td>2026-06-10 09:42:00 JST</td>
+      <td>2026-06-10 09:43:00 JST</td>
+      <td>2026-06-10 10:21:00 JST</td>
+      <td>160,39</td>
+      <td>160,36</td>
+      <td>160,44</td>
+      <td>0,05</td>
+      <td>0,72</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>12</td>
+      <td>SELL</td>
+      <td>2026-06-15</td>
+      <td>2026-06-15 09:42:00 JST</td>
+      <td>2026-06-15 09:43:00 JST</td>
+      <td>2026-06-15 09:51:00 JST</td>
+      <td>159,97</td>
+      <td>160,02</td>
+      <td>160,02</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>13</td>
+      <td>SELL</td>
+      <td>2026-06-19</td>
+      <td>2026-06-19 09:42:00 JST</td>
+      <td>2026-06-19 09:43:00 JST</td>
+      <td>2026-06-19 10:21:00 JST</td>
+      <td>161,14</td>
+      <td>161,14</td>
+      <td>161,19</td>
+      <td>0,05</td>
+      <td>-0,10</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>14</td>
+      <td>SELL</td>
+      <td>2026-06-25</td>
+      <td>2026-06-25 09:42:00 JST</td>
+      <td>2026-06-25 09:43:00 JST</td>
+      <td>2026-06-25 10:21:00 JST</td>
+      <td>161,74</td>
+      <td>161,67</td>
+      <td>161,79</td>
+      <td>0,05</td>
+      <td>1,48</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>15</td>
+      <td>SELL</td>
+      <td>2026-06-30</td>
+      <td>2026-06-30 09:42:00 JST</td>
+      <td>2026-06-30 09:43:00 JST</td>
+      <td>2026-06-30 09:53:00 JST</td>
+      <td>161,96</td>
+      <td>162,01</td>
+      <td>162,01</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>16</td>
+      <td>SELL</td>
+      <td>2026-07-03</td>
+      <td>2026-07-03 09:42:00 JST</td>
+      <td>2026-07-03 09:43:00 JST</td>
+      <td>2026-07-03 10:21:00 JST</td>
+      <td>161,42</td>
+      <td>160,94</td>
+      <td>161,47</td>
+      <td>0,05</td>
+      <td>9,70</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>17</td>
+      <td>SELL</td>
+      <td>2026-07-10</td>
+      <td>2026-07-10 09:42:00 JST</td>
+      <td>2026-07-10 09:43:00 JST</td>
+      <td>2026-07-10 10:21:00 JST</td>
+      <td>162,33</td>
+      <td>161,77</td>
+      <td>162,38</td>
+      <td>0,05</td>
+      <td>11,16</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>18</td>
+      <td>SELL</td>
+      <td>2026-07-15</td>
+      <td>2026-07-15 09:42:00 JST</td>
+      <td>2026-07-15 09:43:00 JST</td>
+      <td>2026-07-15 10:21:00 JST</td>
+      <td>162,21</td>
+      <td>162,01</td>
+      <td>162,26</td>
+      <td>0,05</td>
+      <td>3,86</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>19</td>
+      <td>SELL</td>
+      <td>2026-07-20</td>
+      <td>2026-07-20 09:42:00 JST</td>
+      <td>2026-07-20 09:43:00 JST</td>
+      <td>2026-07-20 10:21:00 JST</td>
+      <td>162,42</td>
+      <td>162,39</td>
+      <td>162,47</td>
+      <td>0,05</td>
+      <td>0,64</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>20</td>
+      <td>SELL</td>
+      <td>2026-07-24</td>
+      <td>2026-07-24 09:42:00 JST</td>
+      <td>2026-07-24 09:43:00 JST</td>
+      <td>2026-07-24 10:21:00 JST</td>
+      <td>163,90</td>
+      <td>163,81</td>
+      <td>163,95</td>
+      <td>0,05</td>
+      <td>1,82</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>21</td>
+      <td>SELL</td>
+      <td>2026-07-30</td>
+      <td>2026-07-30 09:42:00 JST</td>
+      <td>2026-07-30 09:43:00 JST</td>
+      <td>2026-07-30 10:21:00 JST</td>
+      <td>163,45</td>
+      <td>163,48</td>
+      <td>163,50</td>
+      <td>0,05</td>
+      <td>-0,52</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>22</td>
+      <td>SELL</td>
+      <td>2026-07-31</td>
+      <td>2026-07-31 09:42:00 JST</td>
+      <td>2026-07-31 09:43:00 JST</td>
+      <td>2026-07-31 09:46:00 JST</td>
+      <td>160,51</td>
+      <td>160,56</td>
+      <td>160,56</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>23</td>
+      <td>SELL</td>
+      <td>2026-08-05</td>
+      <td>2026-08-05 09:42:00 JST</td>
+      <td>2026-08-05 09:43:00 JST</td>
+      <td>2026-08-05 10:21:00 JST</td>
+      <td>157,64</td>
+      <td>157,57</td>
+      <td>157,69</td>
+      <td>0,05</td>
+      <td>1,48</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>13</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:20</td>
+      <td>24</td>
+      <td>SELL</td>
+      <td>2026-08-10</td>
+      <td>2026-08-10 09:42:00 JST</td>
+      <td>2026-08-10 09:43:00 JST</td>
+      <td>2026-08-10 10:03:00 JST</td>
+      <td>157,93</td>
+      <td>157,98</td>
+      <td>157,98</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>1</td>
+      <td>SELL</td>
+      <td>2026-04-20</td>
+      <td>2026-04-20 09:40:00 JST</td>
+      <td>2026-04-20 09:41:00 JST</td>
+      <td>2026-04-20 10:16:00 JST</td>
+      <td>159,03</td>
+      <td>158,98</td>
+      <td>159,09</td>
+      <td>0,05</td>
+      <td>1,04</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>2</td>
+      <td>SELL</td>
+      <td>2026-04-24</td>
+      <td>2026-04-24 09:40:00 JST</td>
+      <td>2026-04-24 09:41:00 JST</td>
+      <td>2026-04-24 09:53:00 JST</td>
+      <td>159,75</td>
+      <td>159,80</td>
+      <td>159,80</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>3</td>
+      <td>SELL</td>
+      <td>2026-04-30</td>
+      <td>2026-04-30 09:40:00 JST</td>
+      <td>2026-04-30 09:41:00 JST</td>
+      <td>2026-04-30 09:52:00 JST</td>
+      <td>160,16</td>
+      <td>160,21</td>
+      <td>160,21</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>4</td>
+      <td>SELL</td>
+      <td>2026-05-05</td>
+      <td>2026-05-05 09:40:00 JST</td>
+      <td>2026-05-05 09:41:00 JST</td>
+      <td>2026-05-05 10:16:00 JST</td>
+      <td>157,22</td>
+      <td>157,24</td>
+      <td>157,28</td>
+      <td>0,05</td>
+      <td>-0,24</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>5</td>
+      <td>SELL</td>
+      <td>2026-05-08</td>
+      <td>2026-05-08 09:40:00 JST</td>
+      <td>2026-05-08 09:41:00 JST</td>
+      <td>2026-05-08 09:54:00 JST</td>
+      <td>156,91</td>
+      <td>156,96</td>
+      <td>156,96</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>6</td>
+      <td>SELL</td>
+      <td>2026-05-15</td>
+      <td>2026-05-15 09:40:00 JST</td>
+      <td>2026-05-15 09:41:00 JST</td>
+      <td>2026-05-15 09:54:00 JST</td>
+      <td>158,44</td>
+      <td>158,49</td>
+      <td>158,49</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>7</td>
+      <td>SELL</td>
+      <td>2026-05-20</td>
+      <td>2026-05-20 09:40:00 JST</td>
+      <td>2026-05-20 09:41:00 JST</td>
+      <td>2026-05-20 10:16:00 JST</td>
+      <td>159,04</td>
+      <td>159,04</td>
+      <td>159,09</td>
+      <td>0,05</td>
+      <td>0,14</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>8</td>
+      <td>SELL</td>
+      <td>2026-05-25</td>
+      <td>2026-05-25 09:40:00 JST</td>
+      <td>2026-05-25 09:41:00 JST</td>
+      <td>2026-05-25 10:16:00 JST</td>
+      <td>158,92</td>
+      <td>158,83</td>
+      <td>158,97</td>
+      <td>0,05</td>
+      <td>1,80</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>9</td>
+      <td>SELL</td>
+      <td>2026-05-29</td>
+      <td>2026-05-29 09:40:00 JST</td>
+      <td>2026-05-29 09:41:00 JST</td>
+      <td>2026-05-29 10:16:00 JST</td>
+      <td>159,29</td>
+      <td>159,26</td>
+      <td>159,34</td>
+      <td>0,05</td>
+      <td>0,50</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>10</td>
+      <td>SELL</td>
+      <td>2026-06-05</td>
+      <td>2026-06-05 09:40:00 JST</td>
+      <td>2026-06-05 09:41:00 JST</td>
+      <td>2026-06-05 10:16:00 JST</td>
+      <td>159,96</td>
+      <td>159,92</td>
+      <td>160,01</td>
+      <td>0,05</td>
+      <td>0,74</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>11</td>
+      <td>SELL</td>
+      <td>2026-06-10</td>
+      <td>2026-06-10 09:40:00 JST</td>
+      <td>2026-06-10 09:41:00 JST</td>
+      <td>2026-06-10 10:16:00 JST</td>
+      <td>160,39</td>
+      <td>160,34</td>
+      <td>160,44</td>
+      <td>0,05</td>
+      <td>0,86</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>12</td>
+      <td>SELL</td>
+      <td>2026-06-15</td>
+      <td>2026-06-15 09:40:00 JST</td>
+      <td>2026-06-15 09:41:00 JST</td>
+      <td>2026-06-15 09:49:00 JST</td>
+      <td>159,96</td>
+      <td>160,01</td>
+      <td>160,01</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>13</td>
+      <td>SELL</td>
+      <td>2026-06-19</td>
+      <td>2026-06-19 09:40:00 JST</td>
+      <td>2026-06-19 09:41:00 JST</td>
+      <td>2026-06-19 10:16:00 JST</td>
+      <td>161,16</td>
+      <td>161,11</td>
+      <td>161,21</td>
+      <td>0,05</td>
+      <td>0,98</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>14</td>
+      <td>SELL</td>
+      <td>2026-06-25</td>
+      <td>2026-06-25 09:40:00 JST</td>
+      <td>2026-06-25 09:41:00 JST</td>
+      <td>2026-06-25 10:16:00 JST</td>
+      <td>161,75</td>
+      <td>161,71</td>
+      <td>161,80</td>
+      <td>0,05</td>
+      <td>0,68</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>15</td>
+      <td>SELL</td>
+      <td>2026-06-30</td>
+      <td>2026-06-30 09:40:00 JST</td>
+      <td>2026-06-30 09:41:00 JST</td>
+      <td>2026-06-30 09:53:00 JST</td>
+      <td>161,96</td>
+      <td>162,01</td>
+      <td>162,01</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>16</td>
+      <td>SELL</td>
+      <td>2026-07-03</td>
+      <td>2026-07-03 09:40:00 JST</td>
+      <td>2026-07-03 09:41:00 JST</td>
+      <td>2026-07-03 10:16:00 JST</td>
+      <td>161,41</td>
+      <td>161,07</td>
+      <td>161,46</td>
+      <td>0,05</td>
+      <td>6,66</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>17</td>
+      <td>SELL</td>
+      <td>2026-07-10</td>
+      <td>2026-07-10 09:40:00 JST</td>
+      <td>2026-07-10 09:41:00 JST</td>
+      <td>2026-07-10 10:16:00 JST</td>
+      <td>162,37</td>
+      <td>161,71</td>
+      <td>162,42</td>
+      <td>0,05</td>
+      <td>13,12</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>18</td>
+      <td>SELL</td>
+      <td>2026-07-15</td>
+      <td>2026-07-15 09:40:00 JST</td>
+      <td>2026-07-15 09:41:00 JST</td>
+      <td>2026-07-15 10:16:00 JST</td>
+      <td>162,20</td>
+      <td>161,97</td>
+      <td>162,25</td>
+      <td>0,05</td>
+      <td>4,60</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>19</td>
+      <td>SELL</td>
+      <td>2026-07-20</td>
+      <td>2026-07-20 09:40:00 JST</td>
+      <td>2026-07-20 09:41:00 JST</td>
+      <td>2026-07-20 10:16:00 JST</td>
+      <td>162,42</td>
+      <td>162,35</td>
+      <td>162,47</td>
+      <td>0,05</td>
+      <td>1,42</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>20</td>
+      <td>SELL</td>
+      <td>2026-07-24</td>
+      <td>2026-07-24 09:40:00 JST</td>
+      <td>2026-07-24 09:41:00 JST</td>
+      <td>2026-07-24 10:16:00 JST</td>
+      <td>163,89</td>
+      <td>163,85</td>
+      <td>163,94</td>
+      <td>0,05</td>
+      <td>0,82</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>21</td>
+      <td>SELL</td>
+      <td>2026-07-30</td>
+      <td>2026-07-30 09:40:00 JST</td>
+      <td>2026-07-30 09:41:00 JST</td>
+      <td>2026-07-30 10:16:00 JST</td>
+      <td>163,48</td>
+      <td>163,45</td>
+      <td>163,53</td>
+      <td>0,05</td>
+      <td>0,68</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>22</td>
+      <td>SELL</td>
+      <td>2026-07-31</td>
+      <td>2026-07-31 09:40:00 JST</td>
+      <td>2026-07-31 09:41:00 JST</td>
+      <td>2026-07-31 09:46:00 JST</td>
+      <td>160,52</td>
+      <td>160,57</td>
+      <td>160,57</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>23</td>
+      <td>SELL</td>
+      <td>2026-08-05</td>
+      <td>2026-08-05 09:40:00 JST</td>
+      <td>2026-08-05 09:41:00 JST</td>
+      <td>2026-08-05 10:16:00 JST</td>
+      <td>157,63</td>
+      <td>157,55</td>
+      <td>157,68</td>
+      <td>0,05</td>
+      <td>1,62</td>
+      <td>cierre_horario</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>USDJPY</td>
+      <td>1m</td>
+      <td>Reversal Original</td>
+      <td>15</td>
+      <td></td>
+      <td>5,00</td>
+      <td>10:15</td>
+      <td>24</td>
+      <td>SELL</td>
+      <td>2026-08-10</td>
+      <td>2026-08-10 09:40:00 JST</td>
+      <td>2026-08-10 09:41:00 JST</td>
+      <td>2026-08-10 10:03:00 JST</td>
+      <td>157,93</td>
+      <td>157,98</td>
+      <td>157,98</td>
+      <td>0,05</td>
+      <td>-1,00</td>
+      <td>sl</td>
+    </tr>
+  </tbody>
+</table></div></section>
+<section class="panel"><h2>Licencia y atribución</h2><p class="section-note">Autor: Juan Camilo Rico · Instituto Quant · © 2026. Repositorio original: https://github.com/Jumilo098/tokio-reversal-caso · Creative Commons Atribución-NoComercial 4.0 Internacional (CC BY-NC 4.0).</p></section>
+<section id="configuracion" class="panel"><h2>Configuración</h2><div class="table-wrap"><table border="1" class="dataframe data-table sortable-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>parametro</th>
+      <th>valor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>script_name</td>
+      <td>backtest_reversal_USDJPY</td>
+    </tr>
+    <tr>
+      <td>script_version</td>
+      <td>1.2 | entrada al cierre de vela + salida temporal al cierre | TP/SL + Reversal Original | SHORT | JST | score robustez | dashboard HTML</td>
+    </tr>
+    <tr>
+      <td>estado_ejecucion</td>
+      <td>completo</td>
+    </tr>
+    <tr>
+      <td>autor</td>
+      <td>Juan Camilo Rico</td>
+    </tr>
+    <tr>
+      <td>institucion</td>
+      <td>Instituto Quant</td>
+    </tr>
+    <tr>
+      <td>repositorio_original</td>
+      <td>https://github.com/Jumilo098/tokio-reversal-caso</td>
+    </tr>
+    <tr>
+      <td>licencia</td>
+      <td>Creative Commons Atribución-NoComercial 4.0 Internacional (CC BY-NC 4.0)</td>
+    </tr>
+    <tr>
+      <td>zona_horaria_estrategia</td>
+      <td>Asia/Tokyo</td>
+    </tr>
+    <tr>
+      <td>activo</td>
+      <td>USDJPY</td>
+    </tr>
+    <tr>
+      <td>direccion</td>
+      <td>SHORT / SELL únicamente</td>
+    </tr>
+    <tr>
+      <td>entrada</td>
+      <td>cierre de la vela de señal</td>
+    </tr>
+    <tr>
+      <td>salida_temporal_reversal_original</td>
+      <td>cierre de la vela que contiene la hora objetivo</td>
+    </tr>
+    <tr>
+      <td>gestion_tpsl_desde</td>
+      <td>vela siguiente a la entrada al cierre</td>
+    </tr>
+    <tr>
+      <td>granularidad</td>
+      <td>cada temporalidad se evalúa con su propio CSV y todo el histórico disponible; no se reconstruye M1</td>
+    </tr>
+    <tr>
+      <td>referencia_senal_jst</td>
+      <td>09:55</td>
+    </tr>
+    <tr>
+      <td>entryLeadBars</td>
+      <td>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</td>
+    </tr>
+    <tr>
+      <td>gotobi</td>
+      <td>[5, 10, 15, 20, 25, 30]</td>
+    </tr>
+    <tr>
+      <td>ajuste_viernes</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>ultimo_dia_habil_mes</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>sl_lookback_tpsl</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <td>escenarios_tpsl</td>
+      <td>[parcial_1.1_1.5_2.0, parcial_1.5_2.0_3.0, parcial_2.0_3.0_4.0, tp_unico_1.5, tp_unico_2.0, tp_unico_3.0, tp_unico_4.0]</td>
+    </tr>
+    <tr>
+      <td>fracciones_parciales</td>
+      <td>[0.3333, 0.3333, 0.3334]</td>
+    </tr>
+    <tr>
+      <td>be_despues_tp1</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>sl_pips_original</td>
+      <td>[5, 10, 15, 20, 25, 30, 35]</td>
+    </tr>
+    <tr>
+      <td>cierres_original_jst</td>
+      <td>[10:00, 10:05, 10:10, 10:15, 10:20, 10:25, 10:30]</td>
+    </tr>
+    <tr>
+      <td>criterio_intrabar</td>
+      <td>SL primero</td>
+    </tr>
+    <tr>
+      <td>max_timeframe_minutes</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>combinaciones_por_temporalidad</td>
+      <td>896</td>
+    </tr>
+    <tr>
+      <td>ranking_principal</td>
+      <td>Score de robustez descendente; desempates Profit Factor y R neto descendentes</td>
+    </tr>
+    <tr>
+      <td>minimo_trades_ranking</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>metricas_horas_dias_rentables</td>
+      <td>descartadas</td>
+    </tr>
+    <tr>
+      <td>archivos_analizados</td>
+      <td>[USDJPY_1M.csv]</td>
+    </tr>
+    <tr>
+      <td>output_dir</td>
+      <td>resultados_backtest_reversal_USDJPY_2026_08_12_115458</td>
+    </tr>
+    <tr>
+      <td>fecha_ejecucion</td>
+      <td>2026-08-12T12:05:28.112065</td>
+    </tr>
+  </tbody>
+</table></div></section><div class="footer">Generado automáticamente por backtest_reversal_USDJPY</div></main>
+<script>
+(function(){
+    function cleanText(value){ return (value || "").toString().trim(); }
+    function parseNumber(value){
+        var s = cleanText(value).replace(/%/g, "").replace(/\s+/g, "").replace(/−/g, "-");
+        if (s === "") return null;
+        if (/^[+]?inf(inity)?$/i.test(s)) return Infinity;
+        if (/^-inf(inity)?$/i.test(s)) return -Infinity;
+        var commaCount = (s.match(/,/g) || []).length;
+        var dotCount = (s.match(/\./g) || []).length;
+        if (commaCount > 0 && dotCount > 0){
+            if (s.lastIndexOf(",") > s.lastIndexOf(".")){ s = s.replace(/\./g, "").replace(",", "."); } else { s = s.replace(/,/g, ""); }
+        } else if (commaCount > 0){ s = s.replace(",", "."); }
+        if ((s.match(/\./g) || []).length > 1){ s = s.replace(/\.(?=.*\.)/g, ""); }
+        if (/^[+-]?\d+(\.\d+)?$/.test(s)){ var n = Number(s); return Number.isNaN(n) ? null : n; }
+        return null;
+    }
+    function parseDateValue(value){
+        var s = cleanText(value);
+        if (/^\d{4}-\d{2}-\d{2}(\s+\d{2}:\d{2}(:\d{2})?)?$/.test(s)){ var t = Date.parse(s.replace(" ", "T")); return Number.isNaN(t) ? null : t; }
+        return null;
+    }
+    function sortableValue(value){
+        var s = cleanText(value); if (s === "") return {type:"empty",value:null,text:""};
+        var d = parseDateValue(s); if (d !== null) return {type:"number",value:d,text:s};
+        var n = parseNumber(s); if (n !== null) return {type:"number",value:n,text:s};
+        return {type:"text",value:s.toLowerCase(),text:s};
+    }
+    function sortTable(table, columnIndex, direction){
+        var tbody = table.querySelector("tbody"); if (!tbody) return;
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll("tr"));
+        rows.forEach(function(row, idx){ if (!row.dataset.originalIndex) row.dataset.originalIndex = idx; });
+        rows.sort(function(a,b){
+            var av = sortableValue(a.children[columnIndex] ? a.children[columnIndex].innerText : "");
+            var bv = sortableValue(b.children[columnIndex] ? b.children[columnIndex].innerText : "");
+            if (av.type === "empty" && bv.type === "empty") return 0;
+            if (av.type === "empty") return 1; if (bv.type === "empty") return -1;
+            var result = 0;
+            if (av.type === "number" && bv.type === "number") result = av.value === bv.value ? 0 : (av.value > bv.value ? 1 : -1);
+            else result = av.text.localeCompare(bv.text, "es", {numeric:true,sensitivity:"base"});
+            if (result === 0) result = Number(a.dataset.originalIndex) - Number(b.dataset.originalIndex);
+            return result * direction;
+        });
+        rows.forEach(function(row){ tbody.appendChild(row); });
+    }
+    function initSortableTables(){
+        document.querySelectorAll("table.data-table").forEach(function(table){
+            var headers = table.querySelectorAll("thead th");
+            headers.forEach(function(th,columnIndex){
+                th.setAttribute("title","Clic para ordenar por esta columna");
+                th.addEventListener("click",function(){
+                    var isAsc = th.classList.contains("sort-asc"); var direction = isAsc ? -1 : 1;
+                    headers.forEach(function(h){ h.classList.remove("sort-asc"); h.classList.remove("sort-desc"); });
+                    th.classList.add(direction === 1 ? "sort-asc" : "sort-desc");
+                    sortTable(table,columnIndex,direction);
+                });
+            });
+        });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded",initSortableTables); else initSortableTables();
+})();
+</script>
+</body></html>

@@ -60,9 +60,12 @@ lado incómodo: vender contra el último aliento del flujo institucional. Medimo
 ├── data/
 │   ├── resultados_replica_dukascopy.csv ← el dataset del veredicto (436 días, verificable)
 │   └── EVENTOS_AUSENTES.md  ← los 32 gotobis ausentes (468 vs 436): cobertura y trazabilidad
-└── forward/
-    ├── bitacora_forward.csv ← el conteo real hacia los 60 eventos (evento 1 registrado)
-    └── README.md            ← columnas, criterios de corte firmados y estado
+├── forward/
+│   ├── bitacora_forward.csv ← el conteo real hacia los 60 eventos (evento 1 registrado)
+│   └── README.md            ← columnas, criterios de corte firmados y estado
+└── contribuciones/          ← lo que ESTUDIANTES hicieron con el caso (réplicas, auditorías, falsaciones)
+    ├── andres-xi-sobreoptimizacion/  ← 3.584 combinaciones: cómo se fabrica una ganadora falsa
+    └── eduard-burbano-labtest/       ← auditoría de código (5 fallos) + forward independiente
 ```
 
 ## La historia en 10 pasos (cómo se llegó aquí en un día)
@@ -85,6 +88,26 @@ lado incómodo: vender contra el último aliento del flujo institucional. Medimo
    que no se hayan usado.
 10. **Forward:** EA compilado, demo con corte pre-registrado a 60 eventos, criterios firmados antes
     del primer trade. **El backtest propone; el forward dispone.**
+
+## La comunidad ya lo está rompiendo (y eso es el punto)
+
+Desde que se publicó, estudiantes del Instituto Quant tomaron el caso y le hicieron lo que se le
+debe hacer a cualquier resultado: intentar romperlo. Su trabajo está en
+**[`contribuciones/`](contribuciones/)**, con su nombre y con sus límites al lado:
+
+- **[Andrés Xi](contribuciones/andres-xi-sobreoptimizacion/)** barrió 3.584 combinaciones y llamó
+  al experimento por su nombre: *sobreoptimización*. Encontró configuraciones con PF 4,77 sobre
+  **24 operaciones** y sin costos — y las etiquetó como candidatas in-sample en vez de venderlas.
+  El detalle que lo corona: sus ganadoras entran ANTES del fixing, o sea que el optimizador se fue
+  del lado del mercado que tiene mecanismo al que no lo tiene. *Cuando el óptimo numérico
+  contradice el mecanismo, gana el mecanismo.*
+- **[Eduard Burbano](contribuciones/eduard-burbano-labtest/)** auditó el EA, encontró **5 fallos**
+  (dos que no estaban en `docs/09`: el gate "solo demo" que no bloqueaba nada, y el input
+  `MinutosHold` que no hacía nada), los corrigió en una copia y arrancó **su propio forward** con
+  corte firmado. Su grupo de control replicó el nuestro casi exacto: −0,40 pips contra −0,4.
+
+Los dos aportes también **discrepan** del caso en cosas concretas, y esas discrepancias están
+escritas, no escondidas. Léelas: es donde más se aprende.
 
 ## Lo que este caso enseña (más valioso que los pips)
 
